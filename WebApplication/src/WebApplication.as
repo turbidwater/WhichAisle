@@ -5,7 +5,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package
 {
-	import com.realeyes.mysteryApp.views.MainView;
+	import com.realeyes.whichAisle.views.MainView;
 	
 	import flash.display.Sprite;
 		

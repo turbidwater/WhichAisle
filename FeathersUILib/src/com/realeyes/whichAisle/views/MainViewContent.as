@@ -3,9 +3,10 @@
 //  Copyright (C) 2013 RealEyes Media LLC.
 //
 ////////////////////////////////////////////////////////////////////////////////
-package com.realeyes.mysteryApp.views
+package com.realeyes.whichAisle.views
 {
-	import com.realeyes.mysteryApp.control.presenters.MainViewPresenter;
+	import com.realeyes.whichAisle.control.presenters.MainViewPresenter;
+	import com.realeyes.whichAisle.control.signals.InitApplicationSignal;
 	
 	import feathers.controls.Button;
 	import feathers.controls.Label;
@@ -41,6 +42,7 @@ package com.realeyes.mysteryApp.views
 			super();
 			
 			addEventListener( Event.ADDED_TO_STAGE, _onAddedToStage );
+			addEventListener( Event.REMOVED_FROM_STAGE, _onRemovedFromStage );
 		}
 		
 		private function _init():void
@@ -50,6 +52,9 @@ package com.realeyes.mysteryApp.views
 			
 			_initLayout();
 			_initListeners();
+			
+			//Kick off the application start
+			new InitApplicationSignal().dispatch();
 		}
 		
 		private function _initLayout():void
@@ -110,6 +115,11 @@ package com.realeyes.mysteryApp.views
 		private function _onAddedToStage( event:Event ):void
 		{
 			_init();
+		}
+		
+		private function _onRemovedFromStage( event:Event ):void
+		{
+			presenter.cleanUp();
 		}
 		
 		//=== Presenter Listeners ===

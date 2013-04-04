@@ -1,0 +1,18 @@
+== Items ==
+itemsID
+aislesID
+storesID
+name
+notes
+crossedOut
+staple
+
+== Stores ==
+storesID
+name
+color
+
+== Aisles ==
+aislesID
+storesID
+name

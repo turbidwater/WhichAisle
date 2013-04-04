@@ -10,3 +10,4 @@ To set up this project in Flash Builder, create a new Flex Library project and c
 you've checked out this repo.
 
 In Project > Properties > Flex Library Build Path, add the libs directory as a SWC Folder
+In Project > Properties > Flex Compiler, check Include AIR Libraries

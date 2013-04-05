@@ -25,7 +25,7 @@ package com.realeyes.whichAisle.views
 		public var clickedSignal:Signal;
 		
 		public static var layoutXML:XML =	<vertical id={ Screens.TITLE_SCREEN }>
-												<label id="title_lbl">Which Aisle?</label>
+												<label id="title_lbl" alignH="center">Which Aisle?</label>
 											</vertical>;
 		
 		public var view:UIForm;

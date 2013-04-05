@@ -97,7 +97,7 @@ package com.realeyes.whichAisle.views
 			navigator.addScreen( Screens.TITLE_SCREEN, titleNavItem );
 			
 			var itemListNavItem:ScreenNavigatorItem = new ScreenNavigatorItem(	ItemsListScreen,
-																				{ touch:Screens.TITLE_SCREEN }, 
+																				{  }, 
 																				{width:this.width, height:this.height} );
 			navigator.addScreen( Screens.ITEMS_LIST, itemListNavItem );
 																					

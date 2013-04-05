@@ -6,7 +6,10 @@
 package com.realeyes.whichAisle.control.commands
 {
 	import com.realeyes.whichAisle.control.navigation.NavigationManagerBase;
+	import com.realeyes.whichAisle.control.signals.GetItemsSignal;
 	import com.realeyes.whichAisle.model.ApplicationModel;
+	import com.realeyes.whichAisle.model.constants.Screens;
+	import com.realeyes.whichAisle.model.vos.requests.GetItemsRequest;
 	import com.realeyes.whichAisle.model.vos.requests.NavigationRequest;
 
 	public class NavigationCommand implements ICommand
@@ -39,7 +42,15 @@ package com.realeyes.whichAisle.control.commands
 			if( navRequest.makeDataCall )
 			{
 				//TODO: handle data requests here
-				
+				switch( navRequest.screenID )
+				{
+					case Screens.ITEMS_LIST:
+					{
+						applicationModel.itemsChanged.addOnce( _onDataComplete );
+						new GetItemsSignal().dispatch( new GetItemsRequest() );
+						break;
+					}
+				}
 			}
 			else
 			{
@@ -51,7 +62,10 @@ package com.realeyes.whichAisle.control.commands
 		//-----------------------------------------------------------
 		//  EVENT LISTENERS
 		//-----------------------------------------------------------
-		
+		private function _onDataComplete( value:Object ):void
+		{
+			navigationManager.navigateToScreen( navRequest.screenID );
+		}
 		
 		//-----------------------------------------------------------
 		//  GETTERS/SETTERS

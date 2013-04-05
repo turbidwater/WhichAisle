@@ -5,7 +5,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.realeyes.whichAisle.control.presenters
 {
+	import com.realeyes.whichAisle.control.navigation.NavigationManagerBase;
 	import com.realeyes.whichAisle.model.ApplicationModel;
+	import com.realeyes.whichAisle.model.constants.ScreenTitles;
 	import com.realeyes.whichAisle.model.vos.ItemVO;
 	
 	import org.osflash.signals.Signal;
@@ -17,9 +19,9 @@ package com.realeyes.whichAisle.control.presenters
 		//-----------------------------------------------------------
 		public var applicationModel:ApplicationModel;
 		
-		public var colorChangedSignal:Signal = new Signal();
+		public var itemsChangedSignal:Signal;
 		
-		private var _color:Number = 0x00FF00;
+		private var _items:Vector.<ItemVO>;
 		
 		
 		//-----------------------------------------------------------
@@ -33,8 +35,11 @@ package com.realeyes.whichAisle.control.presenters
 		private function _init():void
 		{
 			applicationModel = ApplicationModel.getInstance();
+			applicationModel.currentScreenTitle = ScreenTitles.TITLE_SCREEN;
 			
 			applicationModel.itemsChanged.add( _onItemsChanged );
+			
+			itemsChangedSignal = new Signal();
 		}
 		
 		
@@ -46,10 +51,11 @@ package com.realeyes.whichAisle.control.presenters
 			applicationModel.itemsChanged.remove( _onItemsChanged );
 		}
 		
-		public function changeColor( value:Number ):void
+		public function registerNavigation( navigationManager:NavigationManagerBase ):void
 		{
-			color = value;
+			applicationModel.navigationManager = navigationManager;
 		}
+
 		
 		
 		//-----------------------------------------------------------
@@ -57,6 +63,7 @@ package com.realeyes.whichAisle.control.presenters
 		//-----------------------------------------------------------
 		private function _onItemsChanged( value:Vector.<ItemVO> ):void
 		{
+			items = value;
 			trace( 'I got my items and there are ' + value.length + ' of them' );
 		}
 		
@@ -64,14 +71,14 @@ package com.realeyes.whichAisle.control.presenters
 		//-----------------------------------------------------------
 		//  GETTERS/SETTERS
 		//-----------------------------------------------------------
-		public function get color():Number
+		public function get items():Vector.<ItemVO>
 		{
-			return _color;
+			return _items;
 		}
-		public function set color( value:Number ):void
+		public function set items( value:Vector.<ItemVO> ):void
 		{
-			_color = value;
-			colorChangedSignal.dispatch( _color );
+			_items = value;
+			itemsChangedSignal.dispatch( value );
 		}
 	}
 }

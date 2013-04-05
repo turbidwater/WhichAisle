@@ -7,9 +7,15 @@ package com.realeyes.whichAisle.views
 {
 	import com.danielfreeman.madcomponents.UI;
 	import com.danielfreeman.madcomponents.UIButton;
+	import com.danielfreeman.madcomponents.UIForm;
 	import com.danielfreeman.madcomponents.UILabel;
+	import com.danielfreeman.madcomponents.UINavigation;
+	import com.realeyes.whichAisle.control.navigation.NavigationManager;
 	import com.realeyes.whichAisle.control.presenters.MainViewPresenter;
 	import com.realeyes.whichAisle.control.signals.InitApplicationSignal;
+	import com.realeyes.whichAisle.control.signals.NavigationSignal;
+	import com.realeyes.whichAisle.model.constants.Screens;
+	import com.realeyes.whichAisle.model.vos.requests.NavigationRequest;
 	
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -23,20 +29,15 @@ package com.realeyes.whichAisle.views
 		//-----------------------------------------------------------
 		public var presenter:MainViewPresenter;
 		
-		public var red_btn:UIButton;
-		public var green_btn:UIButton;
-		public var blue_btn:UIButton;
-		public var label_lbl:UILabel;
+		public const layoutXML:XML = 	<navigation id="nav" title="Title">
+											{TitleScreen.layoutXML}
+											{ItemsListScreen.layoutXML}
+										</navigation>;
 		
-		public var layoutXML:XML =	<vertical>
-										<horizontal>
-											<button id="red_btn">Red</button>
-											<button id="green_btn">Green</button>
-											<button id="blue_btn">Blue</button>
-										</horizontal>
-										<label id="label_lbl">This is a MADComponents App</label>
-									</vertical>;
-		
+		public var titleScreen:TitleScreen;
+		public var itemsListScreen:ItemsListScreen;
+		public var uiNavigation:UINavigation;
+									
 		
 		//-----------------------------------------------------------
 		//  INIT
@@ -69,23 +70,25 @@ package com.realeyes.whichAisle.views
 		{
 			UI.create( this, layoutXML );
 			
-			red_btn = UIButton( UI.findViewById( "red_btn" ) );
-			green_btn = UIButton( UI.findViewById( "green_btn" ) );
-			blue_btn = UIButton( UI.findViewById( "blue_btn" ) );
+			titleScreen = new TitleScreen( UIForm( UI.findViewById( Screens.TITLE_SCREEN ) ) );
+			itemsListScreen = new ItemsListScreen( UIForm( UI.findViewById( Screens.ITEMS_LIST ) ) );
 			
-			label_lbl = UILabel( UI.findViewById( "label_lbl" ) );
+			uiNavigation = UINavigation( UI.findViewById( "nav" ) );
+			uiNavigation.navigationBar.visible = false;
+			uiNavigation.autoBack = uiNavigation.autoForward = false;
 			
+			presenter.registerNavigation( new NavigationManager( uiNavigation ) );
+			
+			titleScreen.initialize();
+			itemsListScreen.initialize();
 		}
 		
 		private function _initListeners():void
 		{
 			//Presenter listeners
-			presenter.colorChangedSignal.add( _onColorChanged );
 			
 			//UI Listeners
-			red_btn.addEventListener( UIButton.CLICKED, _onRedClick );
-			green_btn.addEventListener( UIButton.CLICKED, _onGreenClick );
-			blue_btn.addEventListener( UIButton.CLICKED, _onBlueClick );
+			titleScreen.clickedSignal.add( _onTitleScreenClicked );
 		}
 		
 		
@@ -98,26 +101,14 @@ package com.realeyes.whichAisle.views
 		//  EVENT LISTENERS
 		//-----------------------------------------------------------
 		//=== Presenter Listeners ===
-		private function _onColorChanged( value:Number ):void
-		{
-			trace( 'UI color changed ' + value );
-			label_lbl.textColor = value;
-		}
 		
 		//=== UI Listeners ==
-		private function _onRedClick( event:Event ):void
+		private function _onTitleScreenClicked():void
 		{
-			presenter.changeColor( 0xFF0000 );
-		}
-		
-		private function _onGreenClick( event:Event ):void
-		{
-			presenter.changeColor( 0x00FF00 );
-		}
-		
-		private function _onBlueClick( event:Event ):void
-		{
-			presenter.changeColor( 0x0000FF );
+			if( presenter.items )
+			{
+				new NavigationSignal().dispatch( new NavigationRequest( Screens.ITEMS_LIST, false ) );
+			}
 		}
 		
 		

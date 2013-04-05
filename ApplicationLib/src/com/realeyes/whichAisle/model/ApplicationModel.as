@@ -5,6 +5,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.realeyes.whichAisle.model
 {
+	import com.realeyes.whichAisle.control.navigation.NavigationManagerBase;
 	import com.realeyes.whichAisle.model.vos.ItemVO;
 	import com.realeyes.whichAisle.model.vos.StoreVO;
 	
@@ -15,13 +16,17 @@ package com.realeyes.whichAisle.model
 		//-----------------------------------------------------------
 		//  DECLARATIONS
 		//-----------------------------------------------------------
+		public var navigationManager:NavigationManagerBase;
+		
 		public var itemsChanged:Signal;
 		public var storesChanged:Signal;
+		public var currentScreenTitleChange:Signal;
 		
 		private static var _instance:ApplicationModel;
 		
 		private var _items:Vector.<ItemVO>;
 		private var _stores:Vector.<StoreVO>;
+		private var _currentScreenTitle:String;
 		
 		
 		//-----------------------------------------------------------
@@ -32,6 +37,7 @@ package com.realeyes.whichAisle.model
 			//Signals
 			itemsChanged = new Signal();
 			storesChanged = new Signal();
+			currentScreenTitleChange = new Signal();
 			
 			_items = new Vector.<ItemVO>();
 			_stores = new Vector.<StoreVO>();
@@ -83,6 +89,16 @@ package com.realeyes.whichAisle.model
 			storesChanged.dispatch( value );
 		}
 
+		public function get currentScreenTitle():String
+		{
+			return _currentScreenTitle;
+		}
+		public function set currentScreenTitle( value:String ):void
+		{
+			_currentScreenTitle = value;
+			
+			currentScreenTitleChange.dispatch( value );
+		}
 	}
 }
 

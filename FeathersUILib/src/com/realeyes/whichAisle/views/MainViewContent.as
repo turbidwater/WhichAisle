@@ -5,12 +5,21 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.realeyes.whichAisle.views
 {
+	import com.realeyes.whichAisle.control.navigation.NavigationManager;
 	import com.realeyes.whichAisle.control.presenters.MainViewPresenter;
 	import com.realeyes.whichAisle.control.signals.InitApplicationSignal;
+	import com.realeyes.whichAisle.control.signals.NavigationSignal;
+	import com.realeyes.whichAisle.model.constants.Screens;
+	import com.realeyes.whichAisle.model.vos.requests.NavigationRequest;
 	
 	import feathers.controls.Button;
 	import feathers.controls.Label;
 	import feathers.controls.Screen;
+	import feathers.controls.ScreenNavigator;
+	import feathers.controls.ScreenNavigatorItem;
+	import feathers.controls.ScrollContainer;
+	import feathers.layout.AnchorLayout;
+	import feathers.motion.transitions.ScreenSlidingStackTransitionManager;
 	import feathers.themes.MetalWorksMobileTheme;
 	
 	import flash.text.TextFormat;
@@ -26,11 +35,9 @@ package com.realeyes.whichAisle.views
 		//-----------------------------------------------------------
 		public var presenter:MainViewPresenter;
 		
-		public var red_btn:Button;
-		public var green_btn:Button;
-		public var blue_btn:Button;
-		public var label_lbl:Label;
-		
+		protected var container:ScrollContainer;
+		protected var navigator:ScreenNavigator;
+		protected var transitions:ScreenSlidingStackTransitionManager;
 		protected var theme:MetalWorksMobileTheme;
 		
 		
@@ -50,8 +57,33 @@ package com.realeyes.whichAisle.views
 			presenter = new MainViewPresenter();
 			theme = new MetalWorksMobileTheme();
 			
+			//Init screen navigator to handle app navigation
+			navigator = new ScreenNavigator();
+			presenter.registerNavigation( new NavigationManager( navigator ) );
+			
+			//Add screens to the navigator
 			_initLayout();
+			
+			//Listen for events from presenter and UI
 			_initListeners();
+			
+			//Init transitions manager
+			transitions = new ScreenSlidingStackTransitionManager( navigator );
+			transitions.duration = 0.4;
+			
+			//Init scroll container that wraps app
+			container = new ScrollContainer();
+			container.layout = new AnchorLayout();
+			container.clipContent = true;
+			container.horizontalScrollPolicy = ScrollContainer.SCROLL_POLICY_OFF;
+			container.verticalScrollPolicy = ScrollContainer.SCROLL_POLICY_OFF;
+			container.width = stage.stageWidth;
+			container.height = stage.stageHeight;
+			addChild( container );
+			
+			//Display the UI, starting with the title screen
+			container.addChild( navigator );
+			navigator.showScreen( Screens.TITLE_SCREEN );
 			
 			//Kick off the application start
 			new InitApplicationSignal().dispatch();
@@ -59,48 +91,21 @@ package com.realeyes.whichAisle.views
 		
 		private function _initLayout():void
 		{
-			red_btn = new Button();
-			red_btn.x = 15;
-			red_btn.y = 15;
-			red_btn.width = 100;
-			red_btn.height = 100;
-			red_btn.label = "Red";
-			addChild( red_btn );
+			var titleNavItem:ScreenNavigatorItem = new ScreenNavigatorItem(	TitleScreen,
+																			{ clickedSignal:_onTitleScreenClicked }, 
+																			{width:this.width, height:this.height} );
+			navigator.addScreen( Screens.TITLE_SCREEN, titleNavItem );
 			
-			green_btn = new Button();
-			green_btn.x = 130;
-			green_btn.y = 15;
-			green_btn.width = 100;
-			green_btn.height = 100;
-			green_btn.label = "Green";
-			addChild( green_btn );
-			
-			blue_btn = new Button();
-			blue_btn.x = 245;
-			blue_btn.y = 15;
-			blue_btn.width = 100;
-			blue_btn.height = 100;
-			blue_btn.label = "Blue";
-			addChild( blue_btn );
-			
-			label_lbl = new Label();
-			label_lbl.x = 15;
-			label_lbl.y = 130;
-			label_lbl.text = "This is a Feathers application";
-			label_lbl.textRendererProperties.embedFonts = true;
-			label_lbl.textRendererProperties.isHTML = true;
-			addChild( label_lbl );
+			var itemListNavItem:ScreenNavigatorItem = new ScreenNavigatorItem(	ItemsListScreen,
+																				{ touch:Screens.TITLE_SCREEN }, 
+																				{width:this.width, height:this.height} );
+			navigator.addScreen( Screens.ITEMS_LIST, itemListNavItem );
+																					
 		}
 		
 		private function _initListeners():void
 		{
-			//Presenter listeners
-			presenter.colorChangedSignal.add( _onColorChanged );
 			
-			//UI Listeners
-			red_btn.addEventListener( Event.TRIGGERED, _onRedTouch );
-			green_btn.addEventListener( Event.TRIGGERED, _onGreenTouch );
-			blue_btn.addEventListener( Event.TRIGGERED, _onBlueTouch );
 		}
 		
 		
@@ -122,29 +127,18 @@ package com.realeyes.whichAisle.views
 			presenter.cleanUp();
 		}
 		
+		
 		//=== Presenter Listeners ===
-		private function _onColorChanged( value:Number ):void
-		{
-			trace( 'UI color changed ' + value );
-			label_lbl.textRendererProperties.textFormat = new TextFormat( null, 24, value );
-		}
+
 		
 		//=== UI Listeners ==
-		private function _onRedTouch( event:Event ):void
+		private function _onTitleScreenClicked():void
 		{
-			presenter.changeColor( 0xFF0000 );
+			if( presenter.items )
+			{
+				new NavigationSignal().dispatch( new NavigationRequest( Screens.ITEMS_LIST, false ) );
+			}
 		}
-		
-		private function _onGreenTouch( event:Event ):void
-		{
-			presenter.changeColor( 0x00FF00 );
-		}
-		
-		private function _onBlueTouch( event:Event ):void
-		{
-			presenter.changeColor( 0x0000FF );
-		}
-		
 		
 		
 		//-----------------------------------------------------------

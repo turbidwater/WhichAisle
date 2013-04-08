@@ -5,6 +5,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.realeyes.whichAisle.views
 {
+	import com.realeyes.whichAisle.ExtendedTheme;
+	
 	import feathers.controls.Label;
 	import feathers.controls.Screen;
 	
@@ -44,11 +46,8 @@ package com.realeyes.whichAisle.views
 			title_lbl = new Label();
 			title_lbl.text = "Which Aisle?";
 			
-			title_lbl.y = height/3;
-			title_lbl.x = width/2 - title_lbl.width/2;
 			
-			var textFormat:TextFormat = new TextFormat( null, 32, 0xFFFFFF );
-			title_lbl.textRendererProperties = { textFormat:textFormat };
+			title_lbl.nameList.add( ExtendedTheme.TITLE_SCREEN_LABEL );
 			
 			addChild( title_lbl );
 		}
@@ -62,6 +61,14 @@ package com.realeyes.whichAisle.views
 		//-----------------------------------------------------------
 		//  CONTROL
 		//-----------------------------------------------------------
+		override protected function draw():void
+		{
+			width = stage.stageWidth;
+			height = stage.stageHeight;
+			
+			title_lbl.y = height/3;
+			title_lbl.width = width;
+		}
 		
 		
 		//-----------------------------------------------------------

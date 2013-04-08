@@ -48,6 +48,7 @@ package com.realeyes.whichAisle.control.presenters
 			applicationModel.currentScreenTitle = ScreenTitles.ITEMS_LIST;
 			
 			applicationModel.itemsChanged.add( _onItemsChanged );	
+			_onItemsChanged( applicationModel.items );
 		}
 		
 		public function cleanup():void
@@ -65,8 +66,6 @@ package com.realeyes.whichAisle.control.presenters
 		{
 			dataProvider = value;
 		}
-
-		
 
 		
 		//-----------------------------------------------------------

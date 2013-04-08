@@ -5,6 +5,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.realeyes.whichAisle.views
 {
+	import com.realeyes.whichAisle.ExtendedTheme;
 	import com.realeyes.whichAisle.control.navigation.NavigationManager;
 	import com.realeyes.whichAisle.control.presenters.MainViewPresenter;
 	import com.realeyes.whichAisle.control.signals.InitApplicationSignal;
@@ -55,7 +56,7 @@ package com.realeyes.whichAisle.views
 		private function _init():void
 		{
 			presenter = new MainViewPresenter();
-			theme = new MetalWorksMobileTheme();
+			theme = new ExtendedTheme();
 			
 			//Init screen navigator to handle app navigation
 			navigator = new ScreenNavigator();

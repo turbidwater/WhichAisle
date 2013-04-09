@@ -65,7 +65,7 @@ package com.realeyes.whichAisle.control.navigation
 			
 			//Trigger the presenter for the current page. Our original pages get wrapped in another page, so 
 			//we have to dig them out
-			_currentPage = UIForm( _navigation.pages[ _currentScreenIndex ] ).children[0] as UIForm;
+			_currentPage = UIForm( _navigation.pages[ _currentScreenIndex ] ).findViewById( screenID ) as UIForm;
 			_currentPage.dispatchEvent( new MadPresenterEvent( MadPresenterEvent.SETUP ) );
 		}
 		

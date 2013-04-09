@@ -27,7 +27,8 @@ package com.realeyes.whichAisle.views
 		public var presenter:TitleScreenPresenter;
 		
 		public static var layoutXML:XML =	<vertical id={ Screens.TITLE_SCREEN }>
-												<label id="titleScreen_title_lbl" alignH="centre" alignV="centre">Which Aisle?</label>
+												<image>100,100</image>
+												<label id="title_lbl" alignH="centre" >Which Aisle?</label>
 											</vertical>;
 		
 		public var view:UIForm;
@@ -48,7 +49,7 @@ package com.realeyes.whichAisle.views
 		{
 			presenter.setup();
 			
-			title_lbl = UILabel( view.getChildByName( "titleScreen_title_lbl" ) );
+			title_lbl = UILabel( view.findViewById( "title_lbl" ) );
 			
 			view.addEventListener( MouseEvent.CLICK, _onClicked );
 			view.addEventListener( MadPresenterEvent.SETUP, _onSetup );

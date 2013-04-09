@@ -29,15 +29,15 @@ package com.realeyes.whichAisle.views
 		public static const LIST_STATE:int = 1;
 		
 		public static var layoutXML:XML =	<vertical id={ Screens.ITEMS_LIST }>
-												<pages id="itemsList_pageStates">
-													<vertical id="itemsList_emptyState">
-														<label id="itemsList_empty_lbl" alignH="centre" alignV="top">There are no items.</label>
+												<pages id="pageStates">
+													<vertical id="emptyState">
+														<label id="empty_lbl" alignH="centre" alignV="top">There are no items.</label>
 													</vertical>
-													<vertical id="itemsList_listState">
-														<list id="itemsList_item_list"></list>
+													<vertical id="listState">
+														<list id="item_list"></list>
 													</vertical>
 												</pages>
-												<button id="itemsList_delete_btn" alignH="fill" alignV="bottom" >Delete Crossed Out Items</button>
+												<button id="delete_btn" alignH="fill" alignV="bottom" >Delete Crossed Out Items</button>
 											</vertical>;
 		
 		
@@ -65,10 +65,10 @@ package com.realeyes.whichAisle.views
 		
 		public function initialize():void
 		{
-			pageStates = UIPages( UI.findViewById( "itemsList_pageStates" ) );
-			item_list = UIList( UI.findViewById( "itemsList_item_list" ) );
-			empty_lbl = UILabel( UI.findViewById( "itemsList_empty_lbl" ) );
-			delete_btn = UIButton( UI.findViewById( "itemsList_delete_btn" ) );
+			pageStates = UIPages( view.findViewById( "pageStates" ) );
+			item_list = UIList( view.findViewById( "item_list" ) );
+			empty_lbl = UILabel( view.findViewById( "empty_lbl" ) );
+			delete_btn = UIButton( view.findViewById( "delete_btn" ) );
 			
 			_initListeners();
 		}

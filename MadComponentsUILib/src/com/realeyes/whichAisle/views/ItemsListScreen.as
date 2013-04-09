@@ -31,7 +31,7 @@ package com.realeyes.whichAisle.views
 		public static var layoutXML:XML =	<vertical id={ Screens.ITEMS_LIST }>
 												<pages id="pageStates">
 													<vertical id="emptyState">
-														<label id="empty_lbl" alignH="centre" alignV="top">There are no items.</label>
+														<label id="empty_lbl" alignH="centre" alignV="top"><font color="#FFFFFF">There are no items.</font></label>
 													</vertical>
 													<vertical id="listState">
 														<list id="item_list"></list>

@@ -30,7 +30,7 @@ package com.realeyes.whichAisle.views
 		//-----------------------------------------------------------
 		public var presenter:MainViewPresenter;
 		
-		public const layoutXML:XML = 	<navigation id="nav" title="Title">
+		public const layoutXML:XML = 	<navigation id="nav" title="Title" background="#666666">
 											{TitleScreen.layoutXML}
 											{ItemsListScreen.layoutXML}
 										</navigation>;

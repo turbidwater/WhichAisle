@@ -10,6 +10,7 @@ package com.realeyes.whichAisle.views
 	import com.realeyes.whichAisle.model.vos.ItemVO;
 	
 	import feathers.controls.Button;
+	import feathers.controls.Header;
 	import feathers.controls.Label;
 	import feathers.controls.List;
 	import feathers.controls.Screen;
@@ -32,6 +33,7 @@ package com.realeyes.whichAisle.views
 		//-----------------------------------------------------------
 		public var presenter:ItemsListScreenPresenter;
 		
+		public var header:Header;
 		public var item_list:List;
 		public var empty_lbl:Label;
 		public var delete_btn:Button;
@@ -54,6 +56,10 @@ package com.realeyes.whichAisle.views
 		
 		private function _initLayout():void
 		{
+			header = new Header();
+			header.title = presenter.screenTitle;
+			addChild( header );
+			
 			empty_lbl = new Label();
 			empty_lbl.nameList.add( ExtendedTheme.NO_RESULTS_LABEL );
 			empty_lbl.text = "There are no items.";
@@ -69,6 +75,7 @@ package com.realeyes.whichAisle.views
 		private function _initListeners():void
 		{
 			presenter.dataProviderChanged.add( _onDataProviderChanged );
+			presenter.screenTitleChanged.add( _onScreenTitleChanged );
 			dataProvider = presenter.dataProvider;
 			
 			addEventListener( Event.ADDED_TO_STAGE, _onAddedToStage );
@@ -83,6 +90,9 @@ package com.realeyes.whichAisle.views
 		override protected function draw():void
 		{
 			super.draw();
+			
+			header.width = this.actualWidth;
+			header.validate();
 			
 			delete_btn.width = stage.stageWidth;
 			delete_btn.y = this.height - delete_btn.height;
@@ -130,6 +140,11 @@ package com.realeyes.whichAisle.views
 		private function _onDataProviderChanged( value:Vector.<ItemVO> ):void
 		{
 			dataProvider = value;
+		}
+		
+		private function _onScreenTitleChanged( value:String ):void
+		{
+			header.title = value;
 		}
 		
 		private function _onDeleteTouch( event:TouchEvent ):void

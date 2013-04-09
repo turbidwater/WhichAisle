@@ -20,8 +20,10 @@ package com.realeyes.whichAisle.control.presenters
 		public var applicationModel:ApplicationModel;
 		
 		public var dataProviderChanged:Signal;
+		public var screenTitleChanged:Signal;
 		
 		private var _dataProvider:Vector.<ItemVO>;
+		private var _screenTitle:String = ScreenTitles.ITEMS_LIST;
 		
 		
 		//-----------------------------------------------------------
@@ -36,6 +38,7 @@ package com.realeyes.whichAisle.control.presenters
 		{
 			//Signals
 			dataProviderChanged = new Signal();
+			screenTitleChanged = new Signal();
 			
 			applicationModel = ApplicationModel.getInstance();		
 		}
@@ -47,7 +50,11 @@ package com.realeyes.whichAisle.control.presenters
 		public function setup():void
 		{
 			applicationModel.itemsChanged.add( _onItemsChanged );	
+			applicationModel.currentScreenTitleChange.add( _onScreenTitleChanged );
+			
+			//Init values
 			_onItemsChanged( applicationModel.items );
+			_onScreenTitleChanged( applicationModel.currentScreenTitle );
 		}
 		
 		public function cleanup():void
@@ -70,6 +77,11 @@ package com.realeyes.whichAisle.control.presenters
 			*/
 			dataProvider = value;
 		}
+		
+		private function _onScreenTitleChanged( value:String ):void
+		{
+			screenTitle = value;
+		}
 
 		
 		//-----------------------------------------------------------
@@ -85,5 +97,17 @@ package com.realeyes.whichAisle.control.presenters
 			
 			dataProviderChanged.dispatch( value );
 		}
+
+		public function get screenTitle():String
+		{
+			return _screenTitle;
+		}
+		public function set screenTitle( value:String ):void
+		{
+			_screenTitle = value;
+			
+			screenTitleChanged.dispatch( value );
+		}
+
 	}
 }

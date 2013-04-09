@@ -10,10 +10,12 @@ package com.realeyes.whichAisle.views
 	import com.realeyes.whichAisle.model.vos.ItemVO;
 	
 	import feathers.controls.Button;
+	import feathers.controls.GroupedList;
 	import feathers.controls.Header;
 	import feathers.controls.Label;
 	import feathers.controls.List;
 	import feathers.controls.Screen;
+	import feathers.data.HierarchicalCollection;
 	import feathers.data.ListCollection;
 	
 	import flash.text.TextFormat;
@@ -34,7 +36,7 @@ package com.realeyes.whichAisle.views
 		public var presenter:ItemsListScreenPresenter;
 		
 		public var header:Header;
-		public var item_list:List;
+		public var item_list:GroupedList;
 		public var empty_lbl:Label;
 		public var delete_btn:Button;
 		
@@ -69,7 +71,11 @@ package com.realeyes.whichAisle.views
 			delete_btn.label = "Delete Crossed Out Items";
 			addChild( delete_btn );
 
-			item_list = new List();
+			item_list = new GroupedList();
+			item_list.typicalItem = { itemName:'Item Name' };
+			item_list.typicalHeader = 'Header';
+			item_list.itemRendererProperties.labelField = 'itemName';
+			item_list.isSelectable = false;
 		}
 		
 		private function _initListeners():void
@@ -102,6 +108,29 @@ package com.realeyes.whichAisle.views
 			
 			item_list.width = stage.stageWidth;
 			item_list.height = stage.stageHeight - delete_btn.height;
+		}
+		
+		private function _generateCollection( vector:Vector.<ItemVO> ):HierarchicalCollection
+		{
+			var len:int = dataProvider.length;
+			var genericCollection:Array = [];
+			var currentStore:String;
+			var currentNode:Object;
+			for( var i:int = 0; i < len; i++ )
+			{
+				var item:ItemVO = dataProvider[ i ];
+				if( item.store.name != currentStore )
+				{
+					if( currentNode ) genericCollection.push( currentNode );
+					currentStore = item.store.name;
+					currentNode = { header:currentStore, children:[] };
+				}
+				currentNode.children.push( {itemName:item.name, aisleName:item.aisle.name} );
+			}
+			
+			if( currentNode ) genericCollection.push( currentNode );
+			
+			return new HierarchicalCollection( genericCollection );
 		}
 		
 		private function _toggleEmptyState( on:Boolean ):void
@@ -168,7 +197,7 @@ package com.realeyes.whichAisle.views
 		{
 			_dataProvider = value;
 			
-			item_list.dataProvider = new ListCollection( dataProvider );
+			if( value ) item_list.dataProvider = _generateCollection( _dataProvider );
 			_toggleEmptyState( !( value && value.length ) );
 		}
 	}

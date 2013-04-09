@@ -33,20 +33,20 @@ package com.realeyes.whichAisle.views
 		public static const LIST_STATE:int = 1;
 		
 		public static var layoutXML:XML =	<vertical id={ Screens.ITEMS_LIST }>
-												<pages id="pageStates">
-													<vertical id="emptyState">
+												<pages id="pageStates" height="100">
+													<vertical id="emptyState" height="100">
 														<label id="empty_lbl" alignH="centre" alignV="top"><font color="#FFFFFF">There are no items.</font></label>
 													</vertical>
-													<vertical id="listState">
+													<vertical id="listState" height="100">
 														<dividedList id="item_list">
 															<horizontal>
-																<label id="label"></label>
-																<label id="aisle_lbl" alignH="right"><font color="#999999" size="10">Hey</font></label>
+																<label id="label_lbl"><font color="#FFFFFF"></font></label>
+																<label id="aisle_lbl" alignH="right" alignV="centre"><font color="#999999" size="10"></font></label>
 															</horizontal>
 														</dividedList>
 													</vertical>
 												</pages>
-												<button id="delete_btn" alignH="fill" alignV="bottom" >Delete Crossed Out Items</button>
+												<button id="delete_btn" alignH="fill" alignV="bottom">Delete Crossed Out Items</button>
 											</vertical>;
 		
 		
@@ -129,7 +129,7 @@ package com.realeyes.whichAisle.views
 				}
 				
 				//Add in the item
-				xmlString += '<item label="' + item.name + '" />';
+				xmlString += '<item label_lbl="' + item.name + '" aisle_lbl="' + item.aisle.name + '" />';
 			}
 			
 			//Close any open group

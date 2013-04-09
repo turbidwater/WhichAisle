@@ -38,7 +38,12 @@ package com.realeyes.whichAisle.views
 														<label id="empty_lbl" alignH="centre" alignV="top"><font color="#FFFFFF">There are no items.</font></label>
 													</vertical>
 													<vertical id="listState">
-														<groupedList id="item_list"></groupedList>
+														<dividedList id="item_list">
+															<horizontal>
+																<label id="label"></label>
+																<label id="aisle_lbl" alignH="right"><font color="#999999" size="10">Hey</font></label>
+															</horizontal>
+														</dividedList>
 													</vertical>
 												</pages>
 												<button id="delete_btn" alignH="fill" alignV="bottom" >Delete Crossed Out Items</button>
@@ -49,7 +54,7 @@ package com.realeyes.whichAisle.views
 		public var view:UIForm;
 		
 		public var pageStates:UIPages;
-		public var item_list:UIList;
+		public var item_list:UIDividedList;
 		public var empty_lbl:UILabel;
 		public var delete_btn:UIButton;
 		public var filterByStore_btn:UIToggleButton;
@@ -73,9 +78,10 @@ package com.realeyes.whichAisle.views
 		public function initialize():void
 		{
 			pageStates = UIPages( view.findViewById( "pageStates" ) );
-			item_list = UIList( view.findViewById( "item_list" ) );
 			empty_lbl = UILabel( view.findViewById( "empty_lbl" ) );
 			delete_btn = UIButton( view.findViewById( "delete_btn" ) );
+			item_list = UIDividedList( view.findViewById( "item_list" ) );
+			item_list.longClickEnabled = true;
 			
 			navBar = UINavigation( UI.findViewById( 'nav' ) ).navigationBar;
 			
@@ -94,6 +100,9 @@ package com.realeyes.whichAisle.views
 			view.addEventListener( MadPresenterEvent.SETUP, _onSetup );
 			view.addEventListener( MadPresenterEvent.CLEANUP, _onCleanup );
 			
+			item_list.addEventListener( UIList.CLICKED, _onItemClick );
+			item_list.addEventListener( UIList.LONG_CLICK, _onItemLongClick );
+			delete_btn.addEventListener( MouseEvent.CLICK, _onDeleteCheckedItemsClick );
 			filterByStore_btn.addEventListener( MouseEvent.CLICK, _onFilterClick );
 		}
 				
@@ -153,10 +162,25 @@ package com.realeyes.whichAisle.views
 			}
 		}
 		
+		private function _calculateTrueIndex():int
+		{
+			var groupIndex:int = item_list.group;
+			var numPreceeding:int = 0;
+			var dp:Array = item_list.filteredData;
+			for( var i:int = 0; i < groupIndex; i++ )
+			{
+				numPreceeding += (item_list.filteredData[i] as Array).length;
+			}
+			numPreceeding += item_list.index;
+			
+			return numPreceeding;
+		}
+		
 		
 		//-----------------------------------------------------------
 		//  EVENT LISTENERS
 		//-----------------------------------------------------------
+		//=== Nav Events ===
 		private function _onSetup( event:MadPresenterEvent ):void
 		{
 			presenter.setup();
@@ -175,11 +199,13 @@ package com.realeyes.whichAisle.views
 			navBar.rightButton.removeEventListener( MouseEvent.CLICK, _onAddItemClick );
 		}
 		
+		//=== Presenter Events ===
 		private function _onDataProviderChanged( value:Vector.<ItemVO> ):void
 		{
 			dataProvider = value;
 		}
 		
+		//=== UI Events ===
 		private function _onFilterClick( event:MouseEvent ):void
 		{
 			presenter.goToStoreList();
@@ -189,6 +215,23 @@ package com.realeyes.whichAisle.views
 		{
 			presenter.goToAddItem();
 		}
+		
+		private function _onDeleteCheckedItemsClick( event:MouseEvent ):void
+		{
+			presenter.deleteCheckedItems();
+		}
+		
+		private function _onItemLongClick( event:Event ):void
+		{
+			var item:ItemVO = dataProvider[ _calculateTrueIndex() ];
+			presenter.getDetailsForItem( item );
+		}
+		
+		private function _onItemClick( event:Event ):void
+		{
+			var item:ItemVO = dataProvider[ _calculateTrueIndex() ];
+			presenter.toggleItem( item );
+		}		
 		
 		
 		//-----------------------------------------------------------

@@ -9,6 +9,7 @@ package com.realeyes.whichAisle.control.presenters
 	import com.realeyes.whichAisle.model.ApplicationModel;
 	import com.realeyes.whichAisle.model.constants.ScreenTitles;
 	import com.realeyes.whichAisle.model.constants.Screens;
+	import com.realeyes.whichAisle.model.vos.AisleVO;
 	import com.realeyes.whichAisle.model.vos.ItemVO;
 	import com.realeyes.whichAisle.model.vos.StoreVO;
 	import com.realeyes.whichAisle.model.vos.requests.NavigationRequest;
@@ -79,6 +80,22 @@ package com.realeyes.whichAisle.control.presenters
 			//new NavigationSignal().dispatch( new NavigationRequest( Screens.ADD_ITEM, ScreenTitles.ADD_ITEM ) );
 		}
 		
+		public function deleteCheckedItems():void
+		{
+			trace( 'Delete those checked items' );
+		}
+		
+		public function getDetailsForItem( item:ItemVO ):void
+		{
+			trace( 'Get details for ' + item.name );
+		}
+		
+		public function toggleItem( item:ItemVO ):void
+		{
+			item.crossedOut = !item.crossedOut;
+			trace( item.name + ' is crossed out ' + item.crossedOut );
+		}
+		
 		
 		//-----------------------------------------------------------
 		//  EVENT LISTENERS
@@ -88,10 +105,13 @@ package com.realeyes.whichAisle.control.presenters
 			/**/
 			var item1:ItemVO = new ItemVO( 1, 'Lettuce' );
 			item1.store = new StoreVO( 1, 'Sprouts', 0xFF0000 );
+			item1.aisle = new AisleVO( 1, 'Produce' );
 			var item2:ItemVO = new ItemVO( 2, 'Bananas' );
 			item2.store = new StoreVO( 1, 'Sprouts', 0xFF0000 );
+			item2.aisle = new AisleVO( 1, "Produce" );
 			var item3:ItemVO = new ItemVO( 3, 'Jasmine Rice' );
 			item3.store = new StoreVO( 2, 'King Soopers', 0xFF00FF );
+			item3.aisle = new AisleVO( 2, "Rice and Beans" );
 			value = new <ItemVO>[ item1, item2, item3 ];
 			
 			dataProvider = value;
@@ -101,7 +121,7 @@ package com.realeyes.whichAisle.control.presenters
 		{
 			screenTitle = value;
 		}
-
+		
 		
 		//-----------------------------------------------------------
 		//  GETTERS/SETTERS

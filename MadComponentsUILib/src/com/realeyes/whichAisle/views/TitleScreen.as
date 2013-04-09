@@ -8,6 +8,7 @@ package com.realeyes.whichAisle.views
 	import com.danielfreeman.madcomponents.UI;
 	import com.danielfreeman.madcomponents.UIForm;
 	import com.danielfreeman.madcomponents.UILabel;
+	import com.realeyes.whichAisle.control.presenters.TitleScreenPresenter;
 	import com.realeyes.whichAisle.model.constants.Screens;
 	
 	import flash.display.Sprite;
@@ -22,10 +23,10 @@ package com.realeyes.whichAisle.views
 		//-----------------------------------------------------------
 		public var title_lbl:UILabel;
 		
-		public var clickedSignal:Signal;
+		public var presenter:TitleScreenPresenter;
 		
 		public static var layoutXML:XML =	<vertical id={ Screens.TITLE_SCREEN }>
-												<label id="title_lbl" alignH="center">Which Aisle?</label>
+												<label id="title_lbl" alignH="centre" alignV="centre">Which Aisle?</label>
 											</vertical>;
 		
 		public var view:UIForm;
@@ -38,13 +39,13 @@ package com.realeyes.whichAisle.views
 		{
 			super();
 			
-			clickedSignal = new Signal();
+			presenter = new TitleScreenPresenter();
 			this.view = view;
 		}
 		
 		public function initialize():void
 		{
-			//UI.create( this, layoutXML );
+			presenter.setup();
 			
 			title_lbl = UILabel( view.getChildByName( "title_lbl" ) );
 			
@@ -63,8 +64,10 @@ package com.realeyes.whichAisle.views
 		private function _onClicked( event:MouseEvent ):void
 		{
 			event.stopImmediatePropagation();
-			clickedSignal.dispatch();
+			presenter.goToItemsList();
+			presenter.cleanup();
 		}
+		
 		
 		//-----------------------------------------------------------
 		//  GETTERS/SETTERS

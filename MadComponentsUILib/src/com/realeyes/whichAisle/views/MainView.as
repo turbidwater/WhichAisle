@@ -88,7 +88,6 @@ package com.realeyes.whichAisle.views
 			//Presenter listeners
 			
 			//UI Listeners
-			titleScreen.clickedSignal.add( _onTitleScreenClicked );
 		}
 		
 		
@@ -103,14 +102,7 @@ package com.realeyes.whichAisle.views
 		//=== Presenter Listeners ===
 		
 		//=== UI Listeners ==
-		private function _onTitleScreenClicked():void
-		{
-			if( presenter.items )
-			{
-				new NavigationSignal().dispatch( new NavigationRequest( Screens.ITEMS_LIST, false ) );
-			}
-		}
-		
+
 		
 		//-----------------------------------------------------------
 		//  GETTERS/SETTERS

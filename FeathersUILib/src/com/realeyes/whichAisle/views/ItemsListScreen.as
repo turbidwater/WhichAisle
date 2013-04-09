@@ -82,8 +82,7 @@ package com.realeyes.whichAisle.views
 		//-----------------------------------------------------------
 		override protected function draw():void
 		{
-			this.width = stage.stageWidth;
-			this.height = stage.stageHeight;
+			super.draw();
 			
 			delete_btn.width = stage.stageWidth;
 			delete_btn.y = this.height - delete_btn.height;

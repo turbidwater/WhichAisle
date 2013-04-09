@@ -6,6 +6,7 @@
 package com.realeyes.whichAisle.views
 {
 	import com.realeyes.whichAisle.ExtendedTheme;
+	import com.realeyes.whichAisle.control.presenters.TitleScreenPresenter;
 	
 	import feathers.controls.Label;
 	import feathers.controls.Screen;
@@ -26,6 +27,7 @@ package com.realeyes.whichAisle.views
 		//-----------------------------------------------------------
 		public var title_lbl:Label;
 		
+		public var presenter:TitleScreenPresenter;
 		public var clickedSignal:Signal;
 		
 		
@@ -36,6 +38,7 @@ package com.realeyes.whichAisle.views
 		{
 			super();
 			
+			presenter = new TitleScreenPresenter();
 			clickedSignal = new Signal();
 			_initLayout();
 			_initListeners();
@@ -55,6 +58,16 @@ package com.realeyes.whichAisle.views
 		private function _initListeners():void
 		{
 			addEventListener( TouchEvent.TOUCH, _onTouch );
+			
+			addEventListener( Event.REMOVED_FROM_STAGE, _onRemoved );
+			if( stage )
+			{
+				_onAdded( null );
+			}
+			else
+			{
+				addEventListener( Event.ADDED_TO_STAGE, _onAdded );
+			}
 		}
 		
 		
@@ -74,13 +87,25 @@ package com.realeyes.whichAisle.views
 		//-----------------------------------------------------------
 		//  EVENT LISTENERS
 		//-----------------------------------------------------------
+		private function _onAdded( event:Event ):void
+		{
+			presenter.setup();
+			this.removeEventListener( Event.ADDED_TO_STAGE, _onAdded );
+		}
+		
+		private function _onRemoved( event:Event ):void
+		{
+			presenter.cleanup();
+			this.removeEventListener( Event.REMOVED_FROM_STAGE, _onRemoved );
+		}
+		
 		private function _onTouch( event:TouchEvent ):void
 		{
 			event.stopImmediatePropagation();
 			var touch:Touch = event.getTouch( this, TouchPhase.ENDED );
 			if( touch )
 			{
-				clickedSignal.dispatch();
+				presenter.goToItemsList();
 			}
 		}
 		

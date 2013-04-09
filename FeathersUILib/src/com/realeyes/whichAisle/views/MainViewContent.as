@@ -93,12 +93,12 @@ package com.realeyes.whichAisle.views
 		private function _initLayout():void
 		{
 			var titleNavItem:ScreenNavigatorItem = new ScreenNavigatorItem(	TitleScreen,
-																			{ clickedSignal:_onTitleScreenClicked }, 
+																			{}, 
 																			{width:this.width, height:this.height} );
 			navigator.addScreen( Screens.TITLE_SCREEN, titleNavItem );
 			
 			var itemListNavItem:ScreenNavigatorItem = new ScreenNavigatorItem(	ItemsListScreen,
-																				{  }, 
+																				{}, 
 																				{width:this.width, height:this.height} );
 			navigator.addScreen( Screens.ITEMS_LIST, itemListNavItem );
 																					
@@ -133,13 +133,6 @@ package com.realeyes.whichAisle.views
 
 		
 		//=== UI Listeners ==
-		private function _onTitleScreenClicked():void
-		{
-			if( presenter.items )
-			{
-				new NavigationSignal().dispatch( new NavigationRequest( Screens.ITEMS_LIST, false ) );
-			}
-		}
 		
 		
 		//-----------------------------------------------------------

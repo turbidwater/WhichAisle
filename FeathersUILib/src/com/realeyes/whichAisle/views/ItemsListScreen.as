@@ -56,7 +56,7 @@ package com.realeyes.whichAisle.views
 		{
 			empty_lbl = new Label();
 			empty_lbl.nameList.add( ExtendedTheme.NO_RESULTS_LABEL );
-			empty_lbl.text = "There are no items. At least, none that I can find.";
+			empty_lbl.text = "There are no items.";
 			addChild( empty_lbl );
 			
 			delete_btn = new Button();

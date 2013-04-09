@@ -73,6 +73,7 @@ package com.realeyes.whichAisle.views
 			transitions.duration = 0.4;
 			
 			//Init scroll container that wraps app
+			/* removing this for now as it causes issues on orientation change
 			container = new ScrollContainer();
 			container.layout = new AnchorLayout();
 			container.clipContent = true;
@@ -80,10 +81,11 @@ package com.realeyes.whichAisle.views
 			container.verticalScrollPolicy = ScrollContainer.SCROLL_POLICY_OFF;
 			container.width = stage.stageWidth;
 			container.height = stage.stageHeight;
-			addChild( container );
+			*/
+			addChild( navigator );
 			
 			//Display the UI, starting with the title screen
-			container.addChild( navigator );
+			//container.addChild( navigator );
 			navigator.showScreen( Screens.TITLE_SCREEN );
 			
 			//Kick off the application start
@@ -94,12 +96,12 @@ package com.realeyes.whichAisle.views
 		{
 			var titleNavItem:ScreenNavigatorItem = new ScreenNavigatorItem(	TitleScreen,
 																			{}, 
-																			{width:this.width, height:this.height} );
+																			{} );
 			navigator.addScreen( Screens.TITLE_SCREEN, titleNavItem );
 			
 			var itemListNavItem:ScreenNavigatorItem = new ScreenNavigatorItem(	ItemsListScreen,
 																				{}, 
-																				{width:this.width, height:this.height} );
+																				{} );
 			navigator.addScreen( Screens.ITEMS_LIST, itemListNavItem );
 																					
 		}

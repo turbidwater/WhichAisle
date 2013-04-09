@@ -11,7 +11,9 @@ package com.realeyes.whichAisle.views
 	import com.danielfreeman.madcomponents.UIForm;
 	import com.danielfreeman.madcomponents.UILabel;
 	import com.danielfreeman.madcomponents.UIList;
-	import com.realeyes.whichAisle.control.presenters.ItemListScreenPresenter;
+	import com.danielfreeman.madcomponents.UIPages;
+	import com.realeyes.whichAisle.control.presenters.ItemsListScreenPresenter;
+	import com.realeyes.whichAisle.events.MadPresenterEvent;
 	import com.realeyes.whichAisle.model.constants.Screens;
 	import com.realeyes.whichAisle.model.vos.ItemVO;
 	
@@ -23,15 +25,26 @@ package com.realeyes.whichAisle.views
 		//-----------------------------------------------------------
 		//  DECLARATIONS
 		//-----------------------------------------------------------
+		public static const EMPTY_STATE:int = 0;
+		public static const LIST_STATE:int = 1;
+		
 		public static var layoutXML:XML =	<vertical id={ Screens.ITEMS_LIST }>
-												<list id="item_list"></list>
-												<label id="empty_lbl" alignH="centre" alignV="top">There are no items.</label>
-												<button id="delete_btn" alignH="fill" alignV="bottom" >Delete Crossed Out Items</button>
+												<pages id="itemsList_pageStates">
+													<vertical id="itemsList_emptyState">
+														<label id="itemsList_empty_lbl" alignH="centre" alignV="top">There are no items.</label>
+													</vertical>
+													<vertical id="itemsList_listState">
+														<list id="itemsList_item_list"></list>
+													</vertical>
+												</pages>
+												<button id="itemsList_delete_btn" alignH="fill" alignV="bottom" >Delete Crossed Out Items</button>
 											</vertical>;
 		
-		public var presenter:ItemListScreenPresenter;
+		
+		public var presenter:ItemsListScreenPresenter;
 		public var view:UIForm;
 		
+		public var pageStates:UIPages;
 		public var item_list:UIList;
 		public var empty_lbl:UILabel;
 		public var delete_btn:UIButton;
@@ -47,14 +60,17 @@ package com.realeyes.whichAisle.views
 			super();
 			
 			this.view = view;
-			presenter = new ItemListScreenPresenter();
+			presenter = new ItemsListScreenPresenter();
 		}
 		
 		public function initialize():void
 		{
-			item_list = UIList( view.getChildByName( "item_list" ) );
-			empty_lbl = UILabel( view.getChildByName( "empty_lbl" ) );
-			delete_btn = UIButton( view.getChildByName( "delete_btn" ) );
+			pageStates = UIPages( UI.findViewById( "itemsList_pageStates" ) );
+			item_list = UIList( UI.findViewById( "itemsList_item_list" ) );
+			empty_lbl = UILabel( UI.findViewById( "itemsList_empty_lbl" ) );
+			delete_btn = UIButton( UI.findViewById( "itemsList_delete_btn" ) );
+			
+			_initListeners();
 		}
 		
 		private function _initListeners():void
@@ -62,7 +78,8 @@ package com.realeyes.whichAisle.views
 			presenter.dataProviderChanged.add( _onDataProviderChanged );
 			dataProvider = presenter.dataProvider;
 			
-			view.addEventListener( Event.ADDED_TO_STAGE, _onAddedToStage );
+			view.addEventListener( MadPresenterEvent.SETUP, _onSetup );
+			view.addEventListener( MadPresenterEvent.CLEANUP, _onCleanup );
 		}
 				
 		
@@ -104,35 +121,34 @@ package com.realeyes.whichAisle.views
 		
 		private function _toggleEmptyState( on:Boolean ):void
 		{
-			if( on )
+			if( pageStates )
 			{
-				if( !contains( empty_lbl ) ) addChild( empty_lbl );
-				if( contains( item_list ) ) removeChild( item_list );
+				if( on )
+				{
+					pageStates.goToPage( EMPTY_STATE );
+				}
+				else
+				{
+					pageStates.goToPage( LIST_STATE );
+				}
+				
+				delete_btn.mouseEnabled = delete_btn.clickable = !on;
+				
+				view.doLayout();
 			}
-			else
-			{
-				if( contains( empty_lbl ) ) removeChild( empty_lbl );
-				if( !contains( item_list ) ) addChild( item_list );
-			}
-			
-			delete_btn.clickable = !on;
-			
-			view.doLayout();
 		}
 		
 		
 		//-----------------------------------------------------------
 		//  EVENT LISTENERS
 		//-----------------------------------------------------------
-		private function _onAddedToStage( event:Event ):void
+		private function _onSetup( event:MadPresenterEvent ):void
 		{
-			view.addEventListener( Event.REMOVED_FROM_STAGE, _onRemovedFromStage );
 			presenter.setup();
 		}
 		
-		private function _onRemovedFromStage( event:Event ):void
+		private function _onCleanup( event:MadPresenterEvent ):void
 		{
-			removeEventListener( Event.REMOVED_FROM_STAGE, _onRemovedFromStage );
 			presenter.cleanup();
 		}
 		

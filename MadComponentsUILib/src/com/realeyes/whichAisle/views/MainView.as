@@ -14,6 +14,7 @@ package com.realeyes.whichAisle.views
 	import com.realeyes.whichAisle.control.presenters.MainViewPresenter;
 	import com.realeyes.whichAisle.control.signals.InitApplicationSignal;
 	import com.realeyes.whichAisle.control.signals.NavigationSignal;
+	import com.realeyes.whichAisle.model.ApplicationModel;
 	import com.realeyes.whichAisle.model.constants.Screens;
 	import com.realeyes.whichAisle.model.vos.requests.NavigationRequest;
 	
@@ -68,19 +69,20 @@ package com.realeyes.whichAisle.views
 		
 		private function _initLayout():void
 		{
+			
 			UI.create( this, layoutXML );
 			
 			titleScreen = new TitleScreen( UIForm( UI.findViewById( Screens.TITLE_SCREEN ) ) );
 			itemsListScreen = new ItemsListScreen( UIForm( UI.findViewById( Screens.ITEMS_LIST ) ) );
 			
 			uiNavigation = UINavigation( UI.findViewById( "nav" ) );
-			uiNavigation.navigationBar.visible = false;
 			uiNavigation.autoBack = uiNavigation.autoForward = false;
 			
 			presenter.registerNavigation( new NavigationManager( uiNavigation ) );
 			
 			titleScreen.initialize();
 			itemsListScreen.initialize();
+			
 		}
 		
 		private function _initListeners():void

@@ -8,10 +8,11 @@ package com.realeyes.whichAisle.control.presenters
 	import com.realeyes.whichAisle.model.ApplicationModel;
 	import com.realeyes.whichAisle.model.constants.ScreenTitles;
 	import com.realeyes.whichAisle.model.vos.ItemVO;
+	import com.realeyes.whichAisle.model.vos.StoreVO;
 	
 	import org.osflash.signals.Signal;
 
-	public class ItemListScreenPresenter
+	public class ItemsListScreenPresenter
 	{
 		//-----------------------------------------------------------
 		//  DECLARATIONS
@@ -26,7 +27,7 @@ package com.realeyes.whichAisle.control.presenters
 		//-----------------------------------------------------------
 		//  INIT
 		//-----------------------------------------------------------
-		public function ItemListScreenPresenter()
+		public function ItemsListScreenPresenter()
 		{
 			_init();
 		}
@@ -45,8 +46,6 @@ package com.realeyes.whichAisle.control.presenters
 		//-----------------------------------------------------------
 		public function setup():void
 		{
-			applicationModel.currentScreenTitle = ScreenTitles.ITEMS_LIST;
-			
 			applicationModel.itemsChanged.add( _onItemsChanged );	
 			_onItemsChanged( applicationModel.items );
 		}
@@ -64,6 +63,11 @@ package com.realeyes.whichAisle.control.presenters
 		//-----------------------------------------------------------
 		private function _onItemsChanged( value:Vector.<ItemVO> ):void
 		{
+			/*
+			var item:ItemVO = new ItemVO( 1, 'Lettuce' );
+			item.store = new StoreVO( 1, 'Sprouts', 0xFF0000 );
+			value = new <ItemVO>[ item ];
+			*/
 			dataProvider = value;
 		}
 

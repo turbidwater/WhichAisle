@@ -39,6 +39,8 @@ package com.realeyes.whichAisle.control.commands
 		{
 			navRequest = NavigationRequest( data );
 			
+			applicationModel.currentScreenTitle = navRequest.screenTitle;
+			
 			if( navRequest.makeDataCall )
 			{
 				//TODO: handle data requests here

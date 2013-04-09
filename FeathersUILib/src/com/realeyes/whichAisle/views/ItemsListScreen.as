@@ -6,7 +6,7 @@
 package com.realeyes.whichAisle.views
 {
 	import com.realeyes.whichAisle.ExtendedTheme;
-	import com.realeyes.whichAisle.control.presenters.ItemListScreenPresenter;
+	import com.realeyes.whichAisle.control.presenters.ItemsListScreenPresenter;
 	import com.realeyes.whichAisle.model.vos.ItemVO;
 	
 	import feathers.controls.Button;
@@ -30,7 +30,7 @@ package com.realeyes.whichAisle.views
 		//-----------------------------------------------------------
 		//  DECLARATIONS
 		//-----------------------------------------------------------
-		public var presenter:ItemListScreenPresenter;
+		public var presenter:ItemsListScreenPresenter;
 		
 		public var item_list:List;
 		public var empty_lbl:Label;
@@ -46,7 +46,7 @@ package com.realeyes.whichAisle.views
 		{
 			super();
 			
-			presenter = new ItemListScreenPresenter();
+			presenter = new ItemsListScreenPresenter();
 			
 			_initLayout();
 			_initListeners();

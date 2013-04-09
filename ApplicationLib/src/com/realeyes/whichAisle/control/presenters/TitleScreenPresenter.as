@@ -7,6 +7,7 @@ package com.realeyes.whichAisle.control.presenters
 {
 	import com.realeyes.whichAisle.control.signals.NavigationSignal;
 	import com.realeyes.whichAisle.model.ApplicationModel;
+	import com.realeyes.whichAisle.model.constants.ScreenTitles;
 	import com.realeyes.whichAisle.model.constants.Screens;
 	import com.realeyes.whichAisle.model.vos.requests.NavigationRequest;
 	
@@ -36,7 +37,9 @@ package com.realeyes.whichAisle.control.presenters
 		{
 			_timer = new Timer( _delay, 1 );
 			_timer.addEventListener( TimerEvent.TIMER_COMPLETE, _onDelayComplete );
-			_timer.start();
+			//_timer.start();
+			
+			applicationModel.currentScreenTitle = ScreenTitles.TITLE_SCREEN;
 		}
 		
 		public function cleanup():void
@@ -52,7 +55,7 @@ package com.realeyes.whichAisle.control.presenters
 		{
 			if( applicationModel.items )
 			{
-				new NavigationSignal().dispatch( new NavigationRequest( Screens.ITEMS_LIST, false ) );
+				new NavigationSignal().dispatch( new NavigationRequest( Screens.ITEMS_LIST, ScreenTitles.ITEMS_LIST, false ) );
 				cleanup();
 			}
 		}

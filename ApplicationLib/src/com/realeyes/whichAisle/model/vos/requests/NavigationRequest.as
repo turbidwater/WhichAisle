@@ -11,14 +11,16 @@ package com.realeyes.whichAisle.model.vos.requests
 		//  DECLARATIONS
 		//-----------------------------------------------------------
 		public var screenID:String;
+		public var screenTitle:String;
 		public var makeDataCall:Boolean;
 		
 		//-----------------------------------------------------------
 		//  INIT
 		//-----------------------------------------------------------
-		public function NavigationRequest( screenID:String, makeDataCall:Boolean=true )
+		public function NavigationRequest( screenID:String, screenTitle:String, makeDataCall:Boolean=true )
 		{
 			this.screenID = screenID;
+			this.screenTitle = screenTitle;
 			this.makeDataCall = makeDataCall;
 		}
 	}

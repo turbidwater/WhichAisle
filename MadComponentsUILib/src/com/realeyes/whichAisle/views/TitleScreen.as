@@ -9,6 +9,7 @@ package com.realeyes.whichAisle.views
 	import com.danielfreeman.madcomponents.UIForm;
 	import com.danielfreeman.madcomponents.UILabel;
 	import com.realeyes.whichAisle.control.presenters.TitleScreenPresenter;
+	import com.realeyes.whichAisle.events.MadPresenterEvent;
 	import com.realeyes.whichAisle.model.constants.Screens;
 	
 	import flash.display.Sprite;
@@ -26,7 +27,7 @@ package com.realeyes.whichAisle.views
 		public var presenter:TitleScreenPresenter;
 		
 		public static var layoutXML:XML =	<vertical id={ Screens.TITLE_SCREEN }>
-												<label id="title_lbl" alignH="centre" alignV="centre">Which Aisle?</label>
+												<label id="titleScreen_title_lbl" alignH="centre" alignV="centre">Which Aisle?</label>
 											</vertical>;
 		
 		public var view:UIForm;
@@ -47,9 +48,11 @@ package com.realeyes.whichAisle.views
 		{
 			presenter.setup();
 			
-			title_lbl = UILabel( view.getChildByName( "title_lbl" ) );
+			title_lbl = UILabel( view.getChildByName( "titleScreen_title_lbl" ) );
 			
 			view.addEventListener( MouseEvent.CLICK, _onClicked );
+			view.addEventListener( MadPresenterEvent.SETUP, _onSetup );
+			view.addEventListener( MadPresenterEvent.CLEANUP, _onCleanup );
 		}
 		
 		
@@ -61,6 +64,16 @@ package com.realeyes.whichAisle.views
 		//-----------------------------------------------------------
 		//  EVENT LISTENERS
 		//-----------------------------------------------------------
+		private function _onSetup( event:MadPresenterEvent ):void
+		{
+			presenter.setup();
+		}
+		
+		private function _onCleanup( event:MadPresenterEvent ):void
+		{
+			presenter.cleanup();
+		}
+		
 		private function _onClicked( event:MouseEvent ):void
 		{
 			event.stopImmediatePropagation();

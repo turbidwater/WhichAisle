@@ -5,6 +5,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.realeyes.whichAisle.views
 {
+	import com.realeyes.whichAisle.ExtendedTheme;
+	import com.realeyes.whichAisle.control.presenters.TitleScreenPresenter;
+	
 	import feathers.controls.Label;
 	import feathers.controls.Screen;
 	
@@ -24,6 +27,7 @@ package com.realeyes.whichAisle.views
 		//-----------------------------------------------------------
 		public var title_lbl:Label;
 		
+		public var presenter:TitleScreenPresenter;
 		public var clickedSignal:Signal;
 		
 		
@@ -34,6 +38,7 @@ package com.realeyes.whichAisle.views
 		{
 			super();
 			
+			presenter = new TitleScreenPresenter();
 			clickedSignal = new Signal();
 			_initLayout();
 			_initListeners();
@@ -44,11 +49,8 @@ package com.realeyes.whichAisle.views
 			title_lbl = new Label();
 			title_lbl.text = "Which Aisle?";
 			
-			title_lbl.y = height/3;
-			title_lbl.x = width/2 - title_lbl.width/2;
 			
-			var textFormat:TextFormat = new TextFormat( null, 32, 0xFFFFFF );
-			title_lbl.textRendererProperties = { textFormat:textFormat };
+			title_lbl.nameList.add( ExtendedTheme.TITLE_SCREEN_LABEL );
 			
 			addChild( title_lbl );
 		}
@@ -56,24 +58,54 @@ package com.realeyes.whichAisle.views
 		private function _initListeners():void
 		{
 			addEventListener( TouchEvent.TOUCH, _onTouch );
+			
+			addEventListener( Event.REMOVED_FROM_STAGE, _onRemoved );
+			if( stage )
+			{
+				_onAdded( null );
+			}
+			else
+			{
+				addEventListener( Event.ADDED_TO_STAGE, _onAdded );
+			}
 		}
 		
 		
 		//-----------------------------------------------------------
 		//  CONTROL
 		//-----------------------------------------------------------
+		override protected function draw():void
+		{
+			width = stage.stageWidth;
+			height = stage.stageHeight;
+			
+			title_lbl.y = height/3;
+			title_lbl.width = width;
+		}
 		
 		
 		//-----------------------------------------------------------
 		//  EVENT LISTENERS
 		//-----------------------------------------------------------
+		private function _onAdded( event:Event ):void
+		{
+			presenter.setup();
+			this.removeEventListener( Event.ADDED_TO_STAGE, _onAdded );
+		}
+		
+		private function _onRemoved( event:Event ):void
+		{
+			presenter.cleanup();
+			this.removeEventListener( Event.REMOVED_FROM_STAGE, _onRemoved );
+		}
+		
 		private function _onTouch( event:TouchEvent ):void
 		{
 			event.stopImmediatePropagation();
 			var touch:Touch = event.getTouch( this, TouchPhase.ENDED );
 			if( touch )
 			{
-				clickedSignal.dispatch();
+				presenter.goToItemsList();
 			}
 		}
 		

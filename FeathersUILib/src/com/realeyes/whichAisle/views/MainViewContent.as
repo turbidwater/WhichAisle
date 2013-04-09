@@ -5,6 +5,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.realeyes.whichAisle.views
 {
+	import com.realeyes.whichAisle.ExtendedTheme;
 	import com.realeyes.whichAisle.control.navigation.NavigationManager;
 	import com.realeyes.whichAisle.control.presenters.MainViewPresenter;
 	import com.realeyes.whichAisle.control.signals.InitApplicationSignal;
@@ -55,7 +56,7 @@ package com.realeyes.whichAisle.views
 		private function _init():void
 		{
 			presenter = new MainViewPresenter();
-			theme = new MetalWorksMobileTheme();
+			theme = new ExtendedTheme();
 			
 			//Init screen navigator to handle app navigation
 			navigator = new ScreenNavigator();
@@ -92,12 +93,12 @@ package com.realeyes.whichAisle.views
 		private function _initLayout():void
 		{
 			var titleNavItem:ScreenNavigatorItem = new ScreenNavigatorItem(	TitleScreen,
-																			{ clickedSignal:_onTitleScreenClicked }, 
+																			{}, 
 																			{width:this.width, height:this.height} );
 			navigator.addScreen( Screens.TITLE_SCREEN, titleNavItem );
 			
 			var itemListNavItem:ScreenNavigatorItem = new ScreenNavigatorItem(	ItemsListScreen,
-																				{ touch:Screens.TITLE_SCREEN }, 
+																				{}, 
 																				{width:this.width, height:this.height} );
 			navigator.addScreen( Screens.ITEMS_LIST, itemListNavItem );
 																					
@@ -132,13 +133,6 @@ package com.realeyes.whichAisle.views
 
 		
 		//=== UI Listeners ==
-		private function _onTitleScreenClicked():void
-		{
-			if( presenter.items )
-			{
-				new NavigationSignal().dispatch( new NavigationRequest( Screens.ITEMS_LIST, false ) );
-			}
-		}
 		
 		
 		//-----------------------------------------------------------

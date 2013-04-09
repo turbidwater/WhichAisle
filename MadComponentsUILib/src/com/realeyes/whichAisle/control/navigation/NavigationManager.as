@@ -5,10 +5,14 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.realeyes.whichAisle.control.navigation
 {
+	import com.danielfreeman.madcomponents.UIForm;
 	import com.danielfreeman.madcomponents.UINavigation;
 	import com.danielfreeman.madcomponents.UIPages;
+	import com.realeyes.whichAisle.events.MadPresenterEvent;
 	import com.realeyes.whichAisle.model.ApplicationModel;
 	import com.realeyes.whichAisle.model.constants.Screens;
+	
+	import flash.display.Sprite;
 
 	public class NavigationManager extends NavigationManagerBase
 	{
@@ -27,6 +31,7 @@ package com.realeyes.whichAisle.control.navigation
 		private var _navigation:UINavigation;
 		private var _currentScreenIndex:int = 0;
 		private var _applicationModel:ApplicationModel;
+		private var _currentPage:UIForm;
 		
 		
 		//-----------------------------------------------------------
@@ -49,6 +54,8 @@ package com.realeyes.whichAisle.control.navigation
 		{
 			super.navigateToScreen( screenID );
 			
+			if( _currentPage ) _currentPage.dispatchEvent( new MadPresenterEvent( MadPresenterEvent.CLEANUP ) ); 
+			
 			var screenIndex:int = getIndexForScreen( screenID );
 			var dir:String = UIPages.SLIDE_LEFT;
 			if( screenIndex < _currentScreenIndex ) dir = UIPages.SLIDE_RIGHT;
@@ -56,6 +63,10 @@ package com.realeyes.whichAisle.control.navigation
 			_currentScreenIndex = screenIndex;
 			_navigation.goToPage( screenIndex, dir );
 			
+			//Trigger the presenter for the current page. Our original pages get wrapped in another page, so 
+			//we have to dig them out
+			_currentPage = UIForm( _navigation.pages[ _currentScreenIndex ] ).children[0] as UIForm;
+			_currentPage.dispatchEvent( new MadPresenterEvent( MadPresenterEvent.SETUP ) );
 		}
 		
 		public function getIndexForScreen( screenID:String ):int
@@ -72,7 +83,7 @@ package com.realeyes.whichAisle.control.navigation
 		private function _onScreenTitleChanged( value:String ):void
 		{
 			_navigation.navigationBar.text = value;
-			_navigation.navigationBar.visible = (value != "");
+			_navigation.navigationBar.alpha = int(value != "");
 		}
 		
 		

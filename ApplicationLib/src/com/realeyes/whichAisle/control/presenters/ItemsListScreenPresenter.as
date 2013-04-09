@@ -5,10 +5,13 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.realeyes.whichAisle.control.presenters
 {
+	import com.realeyes.whichAisle.control.signals.NavigationSignal;
 	import com.realeyes.whichAisle.model.ApplicationModel;
 	import com.realeyes.whichAisle.model.constants.ScreenTitles;
+	import com.realeyes.whichAisle.model.constants.Screens;
 	import com.realeyes.whichAisle.model.vos.ItemVO;
 	import com.realeyes.whichAisle.model.vos.StoreVO;
+	import com.realeyes.whichAisle.model.vos.requests.NavigationRequest;
 	
 	import org.osflash.signals.Signal;
 
@@ -64,17 +67,33 @@ package com.realeyes.whichAisle.control.presenters
 			applicationModel.itemsChanged.remove( _onItemsChanged );
 		}
 		
+		public function goToStoreList():void
+		{
+			trace( 'Go to stores!' );
+			//new NavigationSignal().dispatch( new NavigationRequest( Screens.STORES_LIST, ScreenTitles.STORES_LIST ) );
+		}
+		
+		public function goToAddItem():void
+		{
+			trace( 'Go to add item' );
+			//new NavigationSignal().dispatch( new NavigationRequest( Screens.ADD_ITEM, ScreenTitles.ADD_ITEM ) );
+		}
+		
 		
 		//-----------------------------------------------------------
 		//  EVENT LISTENERS
 		//-----------------------------------------------------------
 		private function _onItemsChanged( value:Vector.<ItemVO> ):void
 		{
-			/*
-			var item:ItemVO = new ItemVO( 1, 'Lettuce' );
-			item.store = new StoreVO( 1, 'Sprouts', 0xFF0000 );
-			value = new <ItemVO>[ item ];
-			*/
+			/**/
+			var item1:ItemVO = new ItemVO( 1, 'Lettuce' );
+			item1.store = new StoreVO( 1, 'Sprouts', 0xFF0000 );
+			var item2:ItemVO = new ItemVO( 2, 'Bananas' );
+			item2.store = new StoreVO( 1, 'Sprouts', 0xFF0000 );
+			var item3:ItemVO = new ItemVO( 3, 'Jasmine Rice' );
+			item3.store = new StoreVO( 2, 'King Soopers', 0xFF00FF );
+			value = new <ItemVO>[ item1, item2, item3 ];
+			
 			dataProvider = value;
 		}
 		

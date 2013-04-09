@@ -11,14 +11,18 @@ package com.realeyes.whichAisle.views
 	import com.danielfreeman.madcomponents.UIForm;
 	import com.danielfreeman.madcomponents.UILabel;
 	import com.danielfreeman.madcomponents.UIList;
+	import com.danielfreeman.madcomponents.UINavigation;
+	import com.danielfreeman.madcomponents.UINavigationBar;
 	import com.danielfreeman.madcomponents.UIPages;
 	import com.realeyes.whichAisle.control.presenters.ItemsListScreenPresenter;
 	import com.realeyes.whichAisle.events.MadPresenterEvent;
 	import com.realeyes.whichAisle.model.constants.Screens;
 	import com.realeyes.whichAisle.model.vos.ItemVO;
+	import com.realeyes.whichAisle.views.controls.UIToggleButton;
 	
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	
 	public class ItemsListScreen extends Sprite
 	{
@@ -34,7 +38,7 @@ package com.realeyes.whichAisle.views
 														<label id="empty_lbl" alignH="centre" alignV="top"><font color="#FFFFFF">There are no items.</font></label>
 													</vertical>
 													<vertical id="listState">
-														<list id="item_list"></list>
+														<groupedList id="item_list"></groupedList>
 													</vertical>
 												</pages>
 												<button id="delete_btn" alignH="fill" alignV="bottom" >Delete Crossed Out Items</button>
@@ -48,6 +52,9 @@ package com.realeyes.whichAisle.views
 		public var item_list:UIList;
 		public var empty_lbl:UILabel;
 		public var delete_btn:UIButton;
+		public var filterByStore_btn:UIToggleButton;
+		
+		public var navBar:UINavigationBar;
 		
 		private var _dataProvider:Vector.<ItemVO>;
 		
@@ -70,6 +77,12 @@ package com.realeyes.whichAisle.views
 			empty_lbl = UILabel( view.findViewById( "empty_lbl" ) );
 			delete_btn = UIButton( view.findViewById( "delete_btn" ) );
 			
+			navBar = UINavigation( UI.findViewById( 'nav' ) ).navigationBar;
+			
+			filterByStore_btn = new UIToggleButton( navBar, 10, 5, 'By Store', 0x993300 );
+			filterByStore_btn.height = navBar.rightButton.height;
+			filterByStore_btn.selectedColour = 0xFF0000; 
+			
 			_initListeners();
 		}
 		
@@ -80,6 +93,8 @@ package com.realeyes.whichAisle.views
 			
 			view.addEventListener( MadPresenterEvent.SETUP, _onSetup );
 			view.addEventListener( MadPresenterEvent.CLEANUP, _onCleanup );
+			
+			filterByStore_btn.addEventListener( MouseEvent.CLICK, _onFilterClick );
 		}
 				
 		
@@ -145,16 +160,34 @@ package com.realeyes.whichAisle.views
 		private function _onSetup( event:MadPresenterEvent ):void
 		{
 			presenter.setup();
+			
+			navBar.addChild( filterByStore_btn );
+			navBar.rightButton.text = '+';
+			navBar.rightButton.visible = true;
+			navBar.rightButton.addEventListener( MouseEvent.CLICK, _onAddItemClick );
 		}
 		
 		private function _onCleanup( event:MadPresenterEvent ):void
 		{
 			presenter.cleanup();
+			
+			navBar.removeChild( filterByStore_btn );
+			navBar.rightButton.removeEventListener( MouseEvent.CLICK, _onAddItemClick );
 		}
 		
 		private function _onDataProviderChanged( value:Vector.<ItemVO> ):void
 		{
 			dataProvider = value;
+		}
+		
+		private function _onFilterClick( event:MouseEvent ):void
+		{
+			presenter.goToStoreList();
+		}
+		
+		private function _onAddItemClick( event:MouseEvent ):void
+		{
+			presenter.goToAddItem();
 		}
 		
 		

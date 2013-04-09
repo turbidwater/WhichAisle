@@ -5,11 +5,15 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.realeyes.whichAisle.control.navigation
 {
+	import com.danielfreeman.madcomponents.UIBackButton;
+	import com.danielfreeman.madcomponents.UIButton;
 	import com.danielfreeman.madcomponents.UIForm;
 	import com.danielfreeman.madcomponents.UINavigation;
+	import com.danielfreeman.madcomponents.UINavigationBar;
 	import com.danielfreeman.madcomponents.UIPages;
 	import com.realeyes.whichAisle.events.MadPresenterEvent;
 	import com.realeyes.whichAisle.model.ApplicationModel;
+	import com.realeyes.whichAisle.model.constants.ScreenTitles;
 	import com.realeyes.whichAisle.model.constants.Screens;
 	
 	import flash.display.Sprite;
@@ -42,6 +46,8 @@ package com.realeyes.whichAisle.control.navigation
 			super();
 			
 			_navigation = navigation;
+			_navigation.navigationBar.backButton.text = ''; //Disable the default back button
+			_navigation.navigationBar.backButton.visible = false; //Disable the default back button
 			_applicationModel = ApplicationModel.getInstance();
 			_applicationModel.currentScreenTitleChange.add( _onScreenTitleChanged );
 		}
@@ -67,6 +73,7 @@ package com.realeyes.whichAisle.control.navigation
 			//we have to dig them out
 			_currentPage = UIForm( _navigation.pages[ _currentScreenIndex ] ).findViewById( screenID ) as UIForm;
 			_currentPage.dispatchEvent( new MadPresenterEvent( MadPresenterEvent.SETUP ) );
+			
 		}
 		
 		public function getIndexForScreen( screenID:String ):int
@@ -76,6 +83,13 @@ package com.realeyes.whichAisle.control.navigation
 			return index;
 		}
 		
+		private function _setNavBarState( value:String ):void
+		{
+			//set the nav bar state based on the title from the constants
+			var navBar:UINavigationBar = _navigation.navigationBar;
+			navBar.alpha = int( value != ScreenTitles.TITLE_SCREEN );
+		}
+		
 		
 		//-----------------------------------------------------------
 		//  EVENT LISTENERS
@@ -83,7 +97,9 @@ package com.realeyes.whichAisle.control.navigation
 		private function _onScreenTitleChanged( value:String ):void
 		{
 			_navigation.navigationBar.text = value;
-			_navigation.navigationBar.alpha = int(value != "");
+			
+			//Manage nav bar state
+			_setNavBarState( value );
 		}
 		
 		

@@ -20,6 +20,8 @@ package com.realeyes.whichAisle.views
 	import com.realeyes.whichAisle.model.vos.ItemVO;
 	import com.realeyes.whichAisle.views.controls.UIToggleButton;
 	
+	import flash.display.DisplayObject;
+	import flash.display.Graphics;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -176,6 +178,20 @@ package com.realeyes.whichAisle.views
 			return numPreceeding;
 		}
 		
+		private function _toggleStrikethrough( target:Sprite, on:Boolean ):void
+		{
+			var g:Graphics = target.graphics;
+			g.clear();
+			if( on )
+			{
+				var targetY:Number = target.height/2;
+				g.lineStyle( 4, 0xFF0000 );
+				g.moveTo( 5, targetY );
+				g.lineTo( target.width - 5, targetY );
+			}
+			
+		}
+		
 		
 		//-----------------------------------------------------------
 		//  EVENT LISTENERS
@@ -230,7 +246,9 @@ package com.realeyes.whichAisle.views
 		private function _onItemClick( event:Event ):void
 		{
 			var item:ItemVO = dataProvider[ _calculateTrueIndex() ];
+			var label:UILabel = item_list.findViewById( 'label_lbl', item_list.index, item_list.group ) as UILabel; 
 			presenter.toggleItem( item );
+			_toggleStrikethrough( Sprite( label.parent ), item.crossedOut );
 		}		
 		
 		

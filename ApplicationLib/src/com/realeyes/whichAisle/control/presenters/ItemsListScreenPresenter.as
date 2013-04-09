@@ -82,7 +82,21 @@ package com.realeyes.whichAisle.control.presenters
 		
 		public function deleteCheckedItems():void
 		{
-			trace( 'Delete those checked items' );
+			var deletedItems:Vector.<ItemVO> = new Vector.<ItemVO>();
+			var len:int = dataProvider.length;
+			for( var i:int = len-1; i >= 0; i-- )
+			{
+				var itemVO:ItemVO = dataProvider[i];
+				if( itemVO.crossedOut )
+				{
+					deletedItems.push( itemVO );
+					dataProvider.splice( i, 1 );
+				}
+			}
+			
+			//TODO: make data call here ###
+			
+			dataProviderChanged.dispatch( dataProvider );
 		}
 		
 		public function getDetailsForItem( item:ItemVO ):void
@@ -93,7 +107,6 @@ package com.realeyes.whichAisle.control.presenters
 		public function toggleItem( item:ItemVO ):void
 		{
 			item.crossedOut = !item.crossedOut;
-			trace( item.name + ' is crossed out ' + item.crossedOut );
 		}
 		
 		

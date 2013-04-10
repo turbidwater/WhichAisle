@@ -20,13 +20,15 @@ package com.realeyes.whichAisle.model
 		
 		public var itemsChanged:Signal;
 		public var storesChanged:Signal;
-		public var currentScreenTitleChange:Signal;
+		public var currentScreenTitleChanged:Signal;
+		public var currentStoreChanged:Signal;
 		
 		private static var _instance:ApplicationModel;
 		
 		private var _items:Vector.<ItemVO>;
 		private var _stores:Vector.<StoreVO>;
 		private var _currentScreenTitle:String;
+		private var _currentStore:StoreVO;
 		
 		
 		//-----------------------------------------------------------
@@ -37,7 +39,7 @@ package com.realeyes.whichAisle.model
 			//Signals
 			itemsChanged = new Signal();
 			storesChanged = new Signal();
-			currentScreenTitleChange = new Signal();
+			currentScreenTitleChanged = new Signal();
 			
 			_items = new Vector.<ItemVO>();
 			_stores = new Vector.<StoreVO>();
@@ -97,8 +99,20 @@ package com.realeyes.whichAisle.model
 		{
 			_currentScreenTitle = value;
 			
-			currentScreenTitleChange.dispatch( value );
+			currentScreenTitleChanged.dispatch( value );
 		}
+
+		public function get currentStore():StoreVO
+		{
+			return _currentStore;
+		}
+		public function set currentStore( value:StoreVO ):void
+		{
+			_currentStore = value;
+			
+			currentStoreChanged.dispatch( value );
+		}
+
 	}
 }
 

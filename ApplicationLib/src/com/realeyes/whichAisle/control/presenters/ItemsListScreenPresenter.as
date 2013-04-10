@@ -54,7 +54,7 @@ package com.realeyes.whichAisle.control.presenters
 		public function setup():void
 		{
 			applicationModel.itemsChanged.add( _onItemsChanged );	
-			applicationModel.currentScreenTitleChange.add( _onScreenTitleChanged );
+			applicationModel.currentScreenTitleChanged.add( _onScreenTitleChanged );
 			
 			//Init values
 			_onItemsChanged( applicationModel.items );
@@ -76,8 +76,7 @@ package com.realeyes.whichAisle.control.presenters
 		
 		public function goToAddItem():void
 		{
-			trace( 'Go to add item' );
-			//new NavigationSignal().dispatch( new NavigationRequest( Screens.ADD_ITEM, ScreenTitles.ADD_ITEM ) );
+			new NavigationSignal().dispatch( new NavigationRequest( Screens.ADD_ITEM, ScreenTitles.ADD_ITEM, false ) );
 		}
 		
 		public function deleteCheckedItems():void

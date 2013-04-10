@@ -49,7 +49,7 @@ package com.realeyes.whichAisle.control.navigation
 			_navigation.navigationBar.backButton.text = ''; //Disable the default back button
 			_navigation.navigationBar.backButton.visible = false; //Disable the default back button
 			_applicationModel = ApplicationModel.getInstance();
-			_applicationModel.currentScreenTitleChange.add( _onScreenTitleChanged );
+			_applicationModel.currentScreenTitleChanged.add( _onScreenTitleChanged );
 		}
 		
 		

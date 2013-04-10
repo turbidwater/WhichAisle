@@ -103,6 +103,11 @@ package com.realeyes.whichAisle.views
 																				{}, 
 																				{} );
 			navigator.addScreen( Screens.ITEMS_LIST, itemListNavItem );
+			
+			var addItemNavItem:ScreenNavigatorItem = new ScreenNavigatorItem(	AddItemScreen,
+																		{}, 
+																		{} );
+			navigator.addScreen( Screens.ADD_ITEM, addItemNavItem );
 																					
 		}
 		

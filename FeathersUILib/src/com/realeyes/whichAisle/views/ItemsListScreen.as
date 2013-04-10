@@ -7,7 +7,11 @@ package com.realeyes.whichAisle.views
 {
 	import com.realeyes.whichAisle.ExtendedTheme;
 	import com.realeyes.whichAisle.control.presenters.ItemsListScreenPresenter;
+	import com.realeyes.whichAisle.events.LongPressListEvent;
+	import com.realeyes.whichAisle.model.vos.ItemListItemVO;
 	import com.realeyes.whichAisle.model.vos.ItemVO;
+	import com.realeyes.whichAisle.utils.LongPressListener;
+	import com.realeyes.whichAisle.views.itemRenderers.ItemsListItemRenderer;
 	
 	import feathers.controls.Button;
 	import feathers.controls.GroupedList;
@@ -17,16 +21,19 @@ package com.realeyes.whichAisle.views
 	import feathers.controls.Screen;
 	import feathers.data.HierarchicalCollection;
 	import feathers.data.ListCollection;
+	import feathers.events.FeathersEventType;
 	
 	import flash.text.TextFormat;
 	import flash.text.TextFormatAlign;
 	
 	import flashx.textLayout.formats.TextAlign;
 	
+	import starling.display.Image;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
+	import starling.textures.Texture;
 	
 	public class ItemsListScreen extends Screen
 	{
@@ -40,7 +47,11 @@ package com.realeyes.whichAisle.views
 		public var empty_lbl:Label;
 		public var delete_btn:Button;
 		
+		[Embed(source="/images/strikethrough.png", mimeType="image/png")]
+		public var strikethrough:Class;
+		
 		private var _dataProvider:Vector.<ItemVO>;
+		private var _longPressDetected:Boolean;
 		
 		
 		//-----------------------------------------------------------
@@ -75,7 +86,8 @@ package com.realeyes.whichAisle.views
 			item_list.typicalItem = { itemName:'Item Name' };
 			item_list.typicalHeader = 'Header';
 			item_list.itemRendererProperties.labelField = 'itemName';
-			item_list.isSelectable = false;
+			item_list.itemRendererType = ItemsListItemRenderer;
+			item_list.isSelectable = true;
 		}
 		
 		private function _initListeners():void
@@ -87,6 +99,8 @@ package com.realeyes.whichAisle.views
 			addEventListener( Event.ADDED_TO_STAGE, _onAddedToStage );
 			
 			delete_btn.addEventListener( TouchEvent.TOUCH, _onDeleteTouch );
+			item_list.addEventListener( Event.CHANGE, _onListChange );
+			item_list.addEventListener( LongPressListEvent.LONG_PRESS_LIST_ITEM, _onListLongPress );
 		}
 		
 		
@@ -107,7 +121,8 @@ package com.realeyes.whichAisle.views
 			empty_lbl.y = this.height / 3;
 			
 			item_list.width = stage.stageWidth;
-			item_list.height = stage.stageHeight - delete_btn.height;
+			item_list.height = stage.stageHeight - delete_btn.height - header.height;
+			item_list.y = header.height;
 		}
 		
 		private function _generateCollection( vector:Vector.<ItemVO> ):HierarchicalCollection
@@ -125,12 +140,34 @@ package com.realeyes.whichAisle.views
 					currentStore = item.store.name;
 					currentNode = { header:currentStore, children:[] };
 				}
-				currentNode.children.push( {itemName:item.name, aisleName:item.aisle.name} );
+				
+				var data:ItemListItemVO = new ItemListItemVO( item );
+				data.accessory = _generateAisleLabelAccessory( data.aisleName );
+				currentNode.children.push( data );
 			}
 			
 			if( currentNode ) genericCollection.push( currentNode );
 			
 			return new HierarchicalCollection( genericCollection );
+		}
+		
+		private function _generateAisleLabelAccessory( aisleName:String ):Label
+		{
+			var aisle_lbl:Label = new Label();
+			aisle_lbl.nameList.add( ExtendedTheme.ITEM_LIST_AISLE_LABEL );
+			aisle_lbl.text = aisleName;
+			
+			return aisle_lbl;
+		}
+		
+		private function _generateStrikethrough():Image
+		{
+			var texture:Texture = Texture.fromBitmap( new strikethrough() );
+			var strikethrough:Image = new Image( texture );
+			strikethrough.width = item_list.width - 10;
+			strikethrough.x = 5;
+			
+			return strikethrough;
 		}
 		
 		private function _toggleEmptyState( on:Boolean ):void
@@ -183,6 +220,26 @@ package com.realeyes.whichAisle.views
 			{
 				trace( delete_btn.width );
 			}
+		}
+		
+		private function _onListChange( event:Event ):void
+		{
+			if( _longPressDetected )
+			{
+				_longPressDetected = false;
+			}
+			else
+			{
+				var item:ItemVO = ItemListItemVO( item_list.selectedItem ).itemVO;
+				presenter.toggleItem( item );
+			}
+		}
+		
+		private function _onListLongPress( event:LongPressListEvent ):void
+		{
+			_longPressDetected = true;
+			event.stopImmediatePropagation();
+			presenter.getDetailsForItem( event.item );
 		}
 		
 		

@@ -107,6 +107,7 @@ package com.realeyes.whichAisle.control.presenters
 		public function toggleItem( item:ItemVO ):void
 		{
 			item.crossedOut = !item.crossedOut;
+			trace( item.name + ' crossed out ' + item.crossedOut );
 		}
 		
 		

@@ -34,6 +34,8 @@ package com.realeyes.whichAisle.views
 		
 		public var options_list:UIGroupedList;
 		
+		private var _initialized:Boolean;
+		
 		
 		//-----------------------------------------------------------
 		//  INIT
@@ -43,25 +45,31 @@ package com.realeyes.whichAisle.views
 			super();
 			
 			this.view = view;
+			view.addEventListener( UIForm.LOADED, _onLoaded );
+			view.addEventListener( MadPresenterEvent.SETUP, _onSetup );
+			view.addEventListener( MadPresenterEvent.CLEANUP, _onCleanup );
+			
 			presenter = new AddItemScreenPresenter();
 		}
 		
 		public function initialize():void
 		{
-			options_list = UIGroupedList( view.findViewById( "options_list" ) );
-			options_list.longClickEnabled = false;
-			options_list.xmlData = _generateListXML( presenter.dataProvider );
-			
-			navBar = UINavigation( UI.findViewById( 'nav' ) ).navigationBar;
-			
-			_initListeners();
+			if( !_initialized )
+			{
+				options_list = UIGroupedList( view.findViewById( "options_list" ) );
+				options_list.longClickEnabled = false;
+				options_list.xmlData = _generateListXML( presenter.dataProvider );
+				
+				navBar = UINavigation( UI.findViewById( 'nav' ) ).navigationBar;
+				
+				_initListeners();
+				
+				_initialized = true;
+			}
 		}
 		
 		private function _initListeners():void
 		{
-			view.addEventListener( MadPresenterEvent.SETUP, _onSetup );
-			view.addEventListener( MadPresenterEvent.CLEANUP, _onCleanup );
-			
 			options_list.addEventListener( UIList.CLICKED, _onOptionClicked );
 		}
 		
@@ -88,8 +96,16 @@ package com.realeyes.whichAisle.views
 		//  EVENT LISTENERS
 		//-----------------------------------------------------------
 		//=== Nav Events ===
-		private function _onSetup( event:MadPresenterEvent ):void
+		private function _onLoaded( event:Event ):void
 		{
+			_initialized = false;
+			_onSetup( null );
+		}
+		
+		private function _onSetup( event:Event ):void
+		{
+			initialize();
+			
 			navBar.backButton.text = 'Cancel';
 			navBar.backButton.visible = true;
 			navBar.backButton.addEventListener( MouseEvent.CLICK, _onBackClicked );

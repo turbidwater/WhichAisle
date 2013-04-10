@@ -28,6 +28,7 @@ package com.realeyes.whichAisle.views
 	
 	import flashx.textLayout.formats.TextAlign;
 	
+	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.events.Event;
 	import starling.events.Touch;
@@ -43,6 +44,9 @@ package com.realeyes.whichAisle.views
 		public var presenter:ItemsListScreenPresenter;
 		
 		public var header:Header;
+		public var filterByStores_btn:Button;
+		public var addItem_btn:Button;
+		
 		public var item_list:GroupedList;
 		public var empty_lbl:Label;
 		public var delete_btn:Button;
@@ -73,6 +77,16 @@ package com.realeyes.whichAisle.views
 			header.title = presenter.screenTitle;
 			addChild( header );
 			
+			filterByStores_btn = new Button();
+			filterByStores_btn.isToggle = true;
+			filterByStores_btn.label = "Stores";
+			
+			addItem_btn = new Button();
+			addItem_btn.label = '+';
+			
+			header.leftItems = new <DisplayObject>[ filterByStores_btn ];
+			header.rightItems = new <DisplayObject>[ addItem_btn ];
+			
 			empty_lbl = new Label();
 			empty_lbl.nameList.add( ExtendedTheme.NO_RESULTS_LABEL );
 			empty_lbl.text = "There are no items.";
@@ -98,6 +112,8 @@ package com.realeyes.whichAisle.views
 			
 			addEventListener( Event.ADDED_TO_STAGE, _onAddedToStage );
 			
+			filterByStores_btn.addEventListener( Event.TRIGGERED, _onFilterTriggered );
+			addItem_btn.addEventListener( Event.TRIGGERED, _onAddItemTriggered );
 			delete_btn.addEventListener( TouchEvent.TOUCH, _onDeleteTouch );
 			item_list.addEventListener( Event.CHANGE, _onListChange );
 			item_list.addEventListener( LongPressListEvent.LONG_PRESS_LIST_ITEM, _onListLongPress );
@@ -213,12 +229,22 @@ package com.realeyes.whichAisle.views
 			header.title = value;
 		}
 		
+		private function _onFilterTriggered( event:Event ):void
+		{
+			presenter.goToStoreList();
+		}
+		
+		private function _onAddItemTriggered( event:Event ):void
+		{
+			presenter.goToAddItem();
+		}
+		
 		private function _onDeleteTouch( event:TouchEvent ):void
 		{
 			var touch:Touch = event.touches[0];
 			if( touch.phase == TouchPhase.ENDED )
 			{
-				trace( delete_btn.width );
+				presenter.deleteCheckedItems();
 			}
 		}
 		
@@ -228,10 +254,11 @@ package com.realeyes.whichAisle.views
 			{
 				_longPressDetected = false;
 			}
-			else
+			else if( item_list.selectedItem )
 			{
 				var item:ItemVO = ItemListItemVO( item_list.selectedItem ).itemVO;
 				presenter.toggleItem( item );
+				item_list.selectedItem = null;
 			}
 		}
 		

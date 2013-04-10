@@ -117,6 +117,7 @@ package com.realeyes.whichAisle.views.itemRenderers
 			{
 				itemVO = itemListItemVO.itemVO;
 				itemVO.crossedOutChanged.add( _onCrossedOutChanged );
+				_onCrossedOutChanged( itemVO.crossedOut );
 			}
 		}
 	}

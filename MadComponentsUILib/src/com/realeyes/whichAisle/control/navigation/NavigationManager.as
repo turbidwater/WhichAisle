@@ -25,8 +25,8 @@ package com.realeyes.whichAisle.control.navigation
 		//-----------------------------------------------------------
 		public static var screens:Vector.<String> = new <String>[ 	Screens.TITLE_SCREEN, 
 																	Screens.ITEMS_LIST,
-																	Screens.STORES_LIST,
 																	Screens.ADD_ITEM,
+																	Screens.STORES_LIST,
 																	Screens.ITEM_DETAILS,
 																	Screens.STORE_DETAILS,
 																	Screens.AISLE_DETAILS,

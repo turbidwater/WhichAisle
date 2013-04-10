@@ -212,6 +212,8 @@ package com.realeyes.whichAisle.views
 			presenter.cleanup();
 			
 			navBar.removeChild( filterByStore_btn );
+			navBar.rightButtonText = '';
+			navBar.rightButton.visible = false;
 			navBar.rightButton.removeEventListener( MouseEvent.CLICK, _onAddItemClick );
 		}
 		

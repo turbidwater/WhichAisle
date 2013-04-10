@@ -33,11 +33,14 @@ package com.realeyes.whichAisle.views
 		public const layoutXML:XML = 	<navigation id="nav" title="Title" background="#666666" colour="#FF3300">
 											{TitleScreen.layoutXML}
 											{ItemsListScreen.layoutXML}
+											{AddItemScreen.layoutXML}
 										</navigation>;
+		
+		public var uiNavigation:UINavigation;
 		
 		public var titleScreen:TitleScreen;
 		public var itemsListScreen:ItemsListScreen;
-		public var uiNavigation:UINavigation;
+		public var addItemScreen:AddItemScreen;
 									
 		
 		//-----------------------------------------------------------
@@ -69,11 +72,11 @@ package com.realeyes.whichAisle.views
 		
 		private function _initLayout():void
 		{
-			
 			UI.create( this, layoutXML );
 			
 			titleScreen = new TitleScreen( UIForm( UI.findViewById( Screens.TITLE_SCREEN ) ) );
 			itemsListScreen = new ItemsListScreen( UIForm( UI.findViewById( Screens.ITEMS_LIST ) ) );
+			addItemScreen = new AddItemScreen( UIForm( UI.findViewById( Screens.ADD_ITEM ) ) );
 			
 			uiNavigation = UINavigation( UI.findViewById( "nav" ) );
 			uiNavigation.autoBack = uiNavigation.autoForward = false;
@@ -82,7 +85,7 @@ package com.realeyes.whichAisle.views
 			
 			titleScreen.initialize();
 			itemsListScreen.initialize();
-			
+			addItemScreen.initialize();
 		}
 		
 		private function _initListeners():void

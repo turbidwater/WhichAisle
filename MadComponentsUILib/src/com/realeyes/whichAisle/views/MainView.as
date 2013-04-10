@@ -30,7 +30,7 @@ package com.realeyes.whichAisle.views
 		//-----------------------------------------------------------
 		public var presenter:MainViewPresenter;
 		
-		public const layoutXML:XML = 	<navigation id="nav" title="Title" background="#666666" colour="#FF3300">
+		public const layoutXML:XML = 	<navigation id="nav" title="Title" background="#666666" colour="#FF3300" lazyRender="true" recycle="true">
 											{TitleScreen.layoutXML}
 											{ItemsListScreen.layoutXML}
 											{AddItemScreen.layoutXML}
@@ -74,18 +74,17 @@ package com.realeyes.whichAisle.views
 		{
 			UI.create( this, layoutXML );
 			
-			titleScreen = new TitleScreen( UIForm( UI.findViewById( Screens.TITLE_SCREEN ) ) );
-			itemsListScreen = new ItemsListScreen( UIForm( UI.findViewById( Screens.ITEMS_LIST ) ) );
-			addItemScreen = new AddItemScreen( UIForm( UI.findViewById( Screens.ADD_ITEM ) ) );
-			
 			uiNavigation = UINavigation( UI.findViewById( "nav" ) );
 			uiNavigation.autoBack = uiNavigation.autoForward = false;
+			var navManager:NavigationManager = new NavigationManager( uiNavigation );
+			presenter.registerNavigation( navManager );
 			
-			presenter.registerNavigation( new NavigationManager( uiNavigation ) );
+			titleScreen = new TitleScreen( UIForm( uiNavigation.pages[ navManager.getIndexForScreen( Screens.TITLE_SCREEN ) ] ) );
+			itemsListScreen = new ItemsListScreen( UIForm( uiNavigation.pages[ navManager.getIndexForScreen( Screens.ITEMS_LIST ) ] ) );
+			addItemScreen = new AddItemScreen( UIForm( uiNavigation.pages[ navManager.getIndexForScreen( Screens.ADD_ITEM ) ] ) );
+			
 			
 			titleScreen.initialize();
-			itemsListScreen.initialize();
-			addItemScreen.initialize();
 		}
 		
 		private function _initListeners():void

@@ -64,6 +64,7 @@ package com.realeyes.whichAisle.views
 		public var navBar:UINavigationBar;
 		
 		private var _dataProvider:Vector.<ItemVO>;
+		private var _initialized:Boolean;
 		
 		
 		//-----------------------------------------------------------
@@ -74,24 +75,35 @@ package com.realeyes.whichAisle.views
 			super();
 			
 			this.view = view;
+			view.addEventListener( UIForm.LOADED, _onLoaded );
+			view.addEventListener( MadPresenterEvent.SETUP, _onSetup );
+			view.addEventListener( MadPresenterEvent.CLEANUP, _onCleanup );
+			
 			presenter = new ItemsListScreenPresenter();
 		}
 		
 		public function initialize():void
 		{
-			pageStates = UIPages( view.findViewById( "pageStates" ) );
-			empty_lbl = UILabel( view.findViewById( "empty_lbl" ) );
-			delete_btn = UIButton( view.findViewById( "delete_btn" ) );
-			item_list = UIDividedList( view.findViewById( "item_list" ) );
-			item_list.longClickEnabled = true;
+			if( !_initialized )
+			{
+				presenter.setup();
+				
+				pageStates = UIPages( view.findViewById( "pageStates" ) );
+				empty_lbl = UILabel( view.findViewById( "empty_lbl" ) );
+				delete_btn = UIButton( view.findViewById( "delete_btn" ) );
+				item_list = UIDividedList( view.findViewById( "item_list" ) );
+				item_list.longClickEnabled = true;
+				
+				navBar = UINavigation( UI.findViewById( 'nav' ) ).navigationBar;
+				
+				filterByStore_btn = new UIToggleButton( navBar, 10, 5, 'By Store', 0x993300 );
+				filterByStore_btn.height = navBar.rightButton.height;
+				filterByStore_btn.selectedColour = 0xFF0000; 
+				
+				_initListeners();
 			
-			navBar = UINavigation( UI.findViewById( 'nav' ) ).navigationBar;
-			
-			filterByStore_btn = new UIToggleButton( navBar, 10, 5, 'By Store', 0x993300 );
-			filterByStore_btn.height = navBar.rightButton.height;
-			filterByStore_btn.selectedColour = 0xFF0000; 
-			
-			_initListeners();
+				_initialized = true;
+			}
 		}
 		
 		private function _initListeners():void
@@ -99,12 +111,10 @@ package com.realeyes.whichAisle.views
 			presenter.dataProviderChanged.add( _onDataProviderChanged );
 			dataProvider = presenter.dataProvider;
 			
-			view.addEventListener( MadPresenterEvent.SETUP, _onSetup );
-			view.addEventListener( MadPresenterEvent.CLEANUP, _onCleanup );
-			
 			item_list.addEventListener( UIList.CLICKED, _onItemClick );
 			item_list.addEventListener( UIList.LONG_CLICK, _onItemLongClick );
 			delete_btn.addEventListener( MouseEvent.CLICK, _onDeleteCheckedItemsClick );
+			
 			filterByStore_btn.addEventListener( MouseEvent.CLICK, _onFilterClick );
 		}
 				
@@ -197,9 +207,15 @@ package com.realeyes.whichAisle.views
 		//  EVENT LISTENERS
 		//-----------------------------------------------------------
 		//=== Nav Events ===
-		private function _onSetup( event:MadPresenterEvent ):void
+		private function _onLoaded( event:Event ):void
 		{
-			presenter.setup();
+			_initialized = false;
+			_onSetup( null );
+		}
+		
+		private function _onSetup( event:Event ):void
+		{
+			initialize();
 			
 			navBar.addChild( filterByStore_btn );
 			navBar.rightButton.text = '+';

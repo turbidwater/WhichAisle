@@ -14,6 +14,7 @@ package com.realeyes.whichAisle.views
 	import com.realeyes.whichAisle.model.constants.Screens;
 	
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.text.TextFormat;
 	
@@ -45,6 +46,8 @@ package com.realeyes.whichAisle.views
 		[Embed(source="images/logo_realeyesmedia.png")]
 		public var logo:Class;
 		
+		private var _initialized:Boolean;
+		
 		
 		//-----------------------------------------------------------
 		//  INIT
@@ -54,21 +57,28 @@ package com.realeyes.whichAisle.views
 			super();
 			
 			presenter = new TitleScreenPresenter();
+
 			this.view = view;
+			view.addEventListener( UIForm.LOADED, _onLoaded );
+			view.addEventListener( MadPresenterEvent.SETUP, _onSetup );
+			view.addEventListener( MadPresenterEvent.CLEANUP, _onCleanup );
 		}
 		
 		public function initialize():void
 		{
-			presenter.setup();
-			
-			title_lbl = UILabel( view.findViewById( "title_lbl" ) );
-			title_lbl.defaultTextFormat = new TextFormat( null, 30, 0xFFFFFF );
-			logo_img = UIImage( view.findViewById( 'logo_img' ) );
-			logo_img.imageClass = logo;
-			
-			view.addEventListener( MouseEvent.CLICK, _onClicked );
-			view.addEventListener( MadPresenterEvent.SETUP, _onSetup );
-			view.addEventListener( MadPresenterEvent.CLEANUP, _onCleanup );
+			if( !_initialized )
+			{
+				presenter.setup();
+				
+				title_lbl = UILabel( view.findViewById( "title_lbl" ) );
+				title_lbl.defaultTextFormat = new TextFormat( null, 30, 0xFFFFFF );
+				logo_img = UIImage( view.findViewById( 'logo_img' ) );
+				logo_img.imageClass = logo;
+				
+				view.addEventListener( MouseEvent.CLICK, _onClicked );
+				
+				_initialized = true;
+			}
 		}
 		
 		
@@ -80,9 +90,15 @@ package com.realeyes.whichAisle.views
 		//-----------------------------------------------------------
 		//  EVENT LISTENERS
 		//-----------------------------------------------------------
+		private function _onLoaded( event:Event ):void
+		{
+			_initialized = false;
+			_onSetup( null );
+		}
+		
 		private function _onSetup( event:MadPresenterEvent ):void
 		{
-			presenter.setup();
+			initialize();
 		}
 		
 		private function _onCleanup( event:MadPresenterEvent ):void

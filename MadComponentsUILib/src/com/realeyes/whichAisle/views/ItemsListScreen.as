@@ -108,7 +108,6 @@ package com.realeyes.whichAisle.views
 		
 		private function _initListeners():void
 		{
-			presenter.dataProviderChanged.add( _onDataProviderChanged );
 			dataProvider = presenter.dataProvider;
 			
 			item_list.addEventListener( UIList.CLICKED, _onItemClick );
@@ -216,6 +215,8 @@ package com.realeyes.whichAisle.views
 		private function _onSetup( event:Event ):void
 		{
 			initialize();
+			
+			presenter.dataProviderChanged.add( _onDataProviderChanged );
 			
 			navBar.addChild( filterByStore_btn );
 			navBar.rightButton.text = '+';

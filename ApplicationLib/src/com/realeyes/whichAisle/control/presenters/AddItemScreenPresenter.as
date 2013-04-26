@@ -11,7 +11,7 @@ package com.realeyes.whichAisle.control.presenters
 	import com.realeyes.whichAisle.model.constants.Screens;
 	import com.realeyes.whichAisle.model.vos.requests.NavigationRequest;
 
-	public class AddItemScreenPresenter
+	public class AddItemScreenPresenter implements IPresenter
 	{
 		//-----------------------------------------------------------
 		//  DECLARATIONS
@@ -43,6 +43,9 @@ package com.realeyes.whichAisle.control.presenters
 		//-----------------------------------------------------------
 		//  CONTROL
 		//-----------------------------------------------------------
+		public function setup():void{};
+		public function cleanup():void{};
+		
 		public function goToStaplesList():void
 		{
 			trace( 'add staple' );
@@ -55,7 +58,7 @@ package com.realeyes.whichAisle.control.presenters
 			new NavigationSignal().dispatch( new NavigationRequest( Screens.ITEM_DETAILS, ScreenTitles.ITEM_DETAILS_ADD ) );
 		}
 		
-		public function goToItemList():void
+		public function goToItemsList():void
 		{
 			var title:String = ScreenTitles.ITEMS_LIST;
 			if( applicationModel.currentStore ) title = ScreenTitles.ITEMS_LIST_BY_STORE;

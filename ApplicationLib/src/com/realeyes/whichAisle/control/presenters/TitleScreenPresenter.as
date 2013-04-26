@@ -14,7 +14,7 @@ package com.realeyes.whichAisle.control.presenters
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 
-	public class TitleScreenPresenter
+	public class TitleScreenPresenter implements IPresenter
 	{
 		//-----------------------------------------------------------
 		//  DECLARATIONS
@@ -37,7 +37,7 @@ package com.realeyes.whichAisle.control.presenters
 		{
 			_timer = new Timer( _delay, 1 );
 			_timer.addEventListener( TimerEvent.TIMER_COMPLETE, _onDelayComplete );
-			//_timer.start();
+			_timer.start();
 			
 			applicationModel.currentScreenTitle = ScreenTitles.TITLE_SCREEN;
 		}

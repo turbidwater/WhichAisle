@@ -12,7 +12,7 @@ package com.realeyes.whichAisle.control.presenters
 	
 	import org.osflash.signals.Signal;
 
-	public class MainViewPresenter
+	public class MainViewPresenter implements IPresenter
 	{
 		//-----------------------------------------------------------
 		//  DECLARATIONS
@@ -35,18 +35,22 @@ package com.realeyes.whichAisle.control.presenters
 		private function _init():void
 		{
 			applicationModel = ApplicationModel.getInstance();
-			applicationModel.currentScreenTitle = ScreenTitles.TITLE_SCREEN;
-			
-			applicationModel.itemsChanged.add( _onItemsChanged );
-			
 			itemsChangedSignal = new Signal();
+			
+			setup();
 		}
 		
 		
 		//-----------------------------------------------------------
 		//  CONTROL
 		//-----------------------------------------------------------
-		public function cleanUp():void
+		public function setup():void
+		{
+			applicationModel.currentScreenTitle = ScreenTitles.TITLE_SCREEN;
+			applicationModel.itemsChanged.add( _onItemsChanged );
+		}
+		
+		public function cleanup():void
 		{
 			applicationModel.itemsChanged.remove( _onItemsChanged );
 		}

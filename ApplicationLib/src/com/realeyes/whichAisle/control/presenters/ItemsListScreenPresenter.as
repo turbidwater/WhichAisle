@@ -16,7 +16,7 @@ package com.realeyes.whichAisle.control.presenters
 	
 	import org.osflash.signals.Signal;
 
-	public class ItemsListScreenPresenter
+	public class ItemsListScreenPresenter implements IPresenter
 	{
 		//-----------------------------------------------------------
 		//  DECLARATIONS

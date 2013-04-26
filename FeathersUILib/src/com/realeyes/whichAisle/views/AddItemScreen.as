@@ -112,7 +112,7 @@ package com.realeyes.whichAisle.views
 		
 		private function _onCancelClicked( event:Event ):void
 		{
-			presenter.goToItemList();
+			presenter.goToItemsList();
 		}
 	}
 }

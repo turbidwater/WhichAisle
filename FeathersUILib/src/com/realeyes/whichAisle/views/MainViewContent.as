@@ -132,7 +132,7 @@ package com.realeyes.whichAisle.views
 		
 		private function _onRemovedFromStage( event:Event ):void
 		{
-			presenter.cleanUp();
+			presenter.cleanup();
 		}
 		
 		

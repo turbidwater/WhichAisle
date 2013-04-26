@@ -121,7 +121,7 @@ package com.realeyes.whichAisle.views
 		//=== UI Events ===
 		private function _onBackClicked( event:MouseEvent ):void
 		{
-			presenter.goToItemList();
+			presenter.goToItemsList();
 		}
 		
 		private function _onOptionClicked( event:Event ):void
